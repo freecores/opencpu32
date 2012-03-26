@@ -1,0 +1,6 @@
+OpenCPU32 Project
+
+Directory structure
+docs/gen: 	Doxygen generated documentation
+hdl:		Location of ISE project (VHDL)
+simulator:	CPU Simulator source code
