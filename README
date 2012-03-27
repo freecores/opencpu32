@@ -4,6 +4,7 @@ Directory structure
 docs/gen: 	Doxygen generated documentation
 hdl:		Location of ISE project (VHDL)
 simulator:	CPU Simulator source code
+tools		Some tools used on the project
 
 Bibliography:
 http://vhdlguru.blogspot.com.br/
