@@ -23,7 +23,7 @@ end Alu;
 
 --! @brief Arithmetic logic unit, refer to this page for more information http://en.wikipedia.org/wiki/Arithmetic_logic_unit
 --! @details This circuit will be excited by the control unit to perfom some arithimetic, or logic operation (Depending on the opcode selected)
---! You can see some samples on the Internet: http://www.vlsibank.com/sessionspage.asp?titl_id=12222
+--! \n You can see some samples on the Internet: http://www.vlsibank.com/sessionspage.asp?titl_id=12222
 architecture Behavioral of Alu is
 
 begin
