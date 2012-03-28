@@ -10,6 +10,8 @@ package pkgOpenCPU32 is
 --! Declare constants, enums, functions used by the design
 constant nBits		: integer := 32;
 
+type aluOps is (alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, alu_xor, alu_not);
+
 end pkgOpenCPU32;
 
 --! Define functions or procedures
