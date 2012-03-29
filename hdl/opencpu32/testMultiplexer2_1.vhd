@@ -29,16 +29,16 @@ ARCHITECTURE behavior OF testMultiplexer2_1 IS
     
 
    --Inputs
-   signal A : std_logic_vector((nBits - 1) downto 0) := (others => '0');
-   signal B : std_logic_vector((nBits - 1) downto 0) := (others => '0');
-   signal sel : std_logic := '0';
+   signal A : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal B : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal sel : std_logic := '0';														--! Wire to connect Test signal to component
 
  	--Outputs
-   signal S : std_logic_vector((nBits - 1) downto 0);   
+   signal S : std_logic_vector((nBits - 1) downto 0);   							--! Wire to connect Test signal to component
  
 BEGIN
  
-	-- Instantiate the Unit Under Test (UUT)
+	--!Instantiate the Unit Under Test (Multiplexer2_1) (Doxygen bug if it's not commented!)
    uut: Multiplexer2_1 PORT MAP (
           A => A,
           B => B,

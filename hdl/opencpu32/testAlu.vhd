@@ -30,16 +30,16 @@ ARCHITECTURE behavior OF testAlu IS
     
 
    --Inputs
-   signal A : std_logic_vector((nBits - 1) downto 0) := (others => '0');
-   signal B : std_logic_vector((nBits - 1) downto 0) := (others => '0');
-   signal sel : aluOps := alu_sum;
+   signal A : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal B : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal sel : aluOps := alu_sum;														--! Wire to connect Test signal to component
 
  	--Outputs
-   signal S : std_logic_vector((nBits - 1) downto 0);
+   signal S : std_logic_vector((nBits - 1) downto 0);								--! Wire to connect Test signal to component
    
 BEGIN
  
-	-- Instantiate the Unit Under Test (UUT)
+	--! Instantiate the Unit Under Test (Alu) (Doxygen bug if it's not commented!)
    uut: Alu PORT MAP (
           A => A,
           B => B,
