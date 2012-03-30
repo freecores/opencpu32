@@ -17,7 +17,7 @@ constant nBits		: integer := 32;
 --! Number of general registers (r0..r15)
 constant numGenRegs : integer := 16;
 
-type aluOps is (alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, alu_xor, alu_not);
+type aluOps is (alu_pass, alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, alu_xor, alu_not);
 type typeEnDis is (enable, disable);
 type generalRegisters is (r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15);
 
@@ -73,6 +73,7 @@ function Num2reg (a: integer) return generalRegisters is
 		when 13 => valRet := r13;
 		when 14 => valRet := r14;
 		when 15 => valRet := r15;
+		when others => valRet := r0;
 	 end case;
 	 return valRet;
   end Num2reg;

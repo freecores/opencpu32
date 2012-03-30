@@ -50,7 +50,15 @@ BEGIN
    --! Process that will stimulate all of the Alu operations
    stim_proc: process
    begin		      
-      -- AND ---------------------------------------------------------------------------
+      -- Pass ---------------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Pass input A to output" SEVERITY NOTE;
+		sel <= alu_pass;
+		A <= conv_std_logic_vector(22, nBits);
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = (A ) report "Invalid Pass output" severity FAILURE;		
+		
+		-- AND ---------------------------------------------------------------------------
 		wait for 1 ps;
 		REPORT "AND without carry 2(10) AND 3(11)" SEVERITY NOTE;
 		sel <= alu_and;

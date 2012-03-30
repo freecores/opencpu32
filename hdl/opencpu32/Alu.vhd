@@ -31,6 +31,10 @@ begin
 	process (A,B,sel) is
 	begin
 		case sel is
+			when alu_pass =>
+				--Pass operation
+				S <= A;
+			
 			when alu_sum =>
 				--Sum operation
 				S <= A + B;
