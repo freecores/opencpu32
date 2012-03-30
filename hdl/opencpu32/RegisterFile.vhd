@@ -53,7 +53,7 @@ begin
 	readAProcess : process(Read_A_En,Read_A_Addr)
 	begin
 		if (Read_A_En = '1') then
-			A_Out <= regFile(CONV_INTEGER(reg2Num(writeAddr)));
+			A_Out <= regFile(CONV_INTEGER(reg2Num(Read_A_Addr)));
 		else
 			A_Out <= (others => 'Z');
 		end if;
@@ -63,7 +63,7 @@ begin
 	readBProcess : process(Read_B_En,Read_B_Addr)
 	begin
 		if (Read_B_En = '1') then
-			B_Out <= regFile(CONV_INTEGER(reg2Num(writeAddr)));
+			B_Out <= regFile(CONV_INTEGER(reg2Num(Read_B_Addr)));
 		else
 			B_Out <= (others => 'Z');
 		end if;

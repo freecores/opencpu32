@@ -67,6 +67,7 @@ BEGIN
 
    --! Process that will stimulate all register assignments, and reads...
    stim_proc: process
+	variable allZ : std_logic_vector((nBits - 1) downto 0) := (others => 'Z');
    begin		      		
 		-- r0=1 ... r15=16---------------------------------------------------------------------------
 		clk <= '0';		
@@ -123,30 +124,35 @@ BEGIN
 		Read_A_Addr <= r0;
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert A_Out = conv_std_logic_vector(1, nBits) report "Invalid value r0" severity FAILURE;		
+		assert B_Out = allZ report "PortB should be high impedance" severity FAILURE;		
 		
 		REPORT "Check r1 = 2" SEVERITY NOTE;
 		Read_A_En <= '1';
 		Read_A_Addr <= r1;
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert A_Out = conv_std_logic_vector(2, nBits) report "Invalid value r1" severity FAILURE;		
+		assert B_Out = allZ report "PortB should be high impedance" severity FAILURE;		
 		
 		REPORT "Check r2 = 3" SEVERITY NOTE;
 		Read_A_En <= '1';
 		Read_A_Addr <= r2;
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert A_Out = conv_std_logic_vector(3, nBits) report "Invalid value r2" severity FAILURE;
+		assert B_Out = allZ report "PortB should be high impedance" severity FAILURE;		
 		
 		REPORT "Check r3 = 4" SEVERITY NOTE;
 		Read_A_En <= '1';
 		Read_A_Addr <= r3;
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert A_Out = conv_std_logic_vector(4, nBits) report "Invalid value r3" severity FAILURE;
+		assert B_Out = allZ report "PortB should be high impedance" severity FAILURE;		
 		
 		REPORT "Check r4 = 5" SEVERITY NOTE;
 		Read_A_En <= '1';
 		Read_A_Addr <= r4;
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert A_Out = conv_std_logic_vector(5, nBits) report "Invalid value r4" severity FAILURE;
+		assert B_Out = allZ report "PortB should be high impedance" severity FAILURE;		
 
       wait;
    end process;
