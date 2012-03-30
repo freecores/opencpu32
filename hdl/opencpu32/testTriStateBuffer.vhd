@@ -30,11 +30,11 @@ ARCHITECTURE behavior OF testTriStateBuffer IS
     
 
    --Inputs
-   signal A : std_logic_vector((nBits - 1) downto 0) := (others => '0');
-   signal sel : typeEnDis := disable;
+   signal A : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal sel : typeEnDis := disable;													--! Wire to connect Test signal to component
 
  	--Outputs
-   signal S : std_logic_vector((nBits - 1) downto 0);
+   signal S : std_logic_vector((nBits - 1) downto 0);								--! Wire to connect Test signal to component
    
 BEGIN 	
 	--!Instantiate the Unit Under Test (Multiplexer2_1) (Doxygen bug if it's not commented!)
@@ -46,6 +46,7 @@ BEGIN
     
    --! Process that will change sel signal and verify the Mux outputs
    stim_proc: process
+	variable allZ : std_logic_vector((nBits - 1) downto 0) := (others => 'Z');
    begin		
       -- Sel disable ---------------------------------------------------------------------------
 		wait for 1 ps;
@@ -53,7 +54,7 @@ BEGIN
 		sel <= disable;
 		A <= conv_std_logic_vector(10, nBits);		
 		wait for 1 ns;  -- Wait to stabilize the response
-		assert S = ((others => 'Z')) report "Output should be high impedance..." severity FAILURE;		
+		assert S = allZ report "Output should be high impedance..." severity FAILURE;		
       
 		-- Sel disable ---------------------------------------------------------------------------
 		wait for 1 ps;
