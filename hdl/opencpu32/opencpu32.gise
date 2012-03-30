@@ -70,6 +70,12 @@
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="Multiplexer2_1_isim_beh.exe"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="Multiplexer2_1_vhdl.prj"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="Multiplexer2_1_xst.xrpt"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="TriStateBuffer.prj"/>
+    <file xil_pn:fileType="FILE_XST_STX" xil_pn:name="TriStateBuffer.stx"/>
+    <file xil_pn:fileType="FILE_XST" xil_pn:name="TriStateBuffer.xst"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="TriStateBuffer_beh.prj"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="TriStateBuffer_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="TriStateBuffer_isim_beh.wdb"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="_ngo"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/map.xmsgs"/>
     <file xil_pn:fileType="FILE_XMSGS" xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
@@ -80,9 +86,7 @@
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="isim"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_CMD" xil_pn:name="isim.cmd"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testAlu_isim_beh.exe"/>
-    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="testMultiplexer2_1_beh.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testMultiplexer2_1_isim_beh.exe"/>
-    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="testMultiplexer2_1_isim_beh.wdb"/>
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
     <file xil_pn:fileType="FILE_DIRECTORY" xil_pn:name="xlnx_auto_0_xdb"/>
@@ -90,54 +94,58 @@
   </files>
 
   <transforms xmlns="http://www.xilinx.com/XMLSchema">
-    <transform xil_pn:end_ts="1332971514" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1332971514">
+    <transform xil_pn:end_ts="1333115998" xil_pn:name="TRAN_copyInitialToAbstractSimulation" xil_pn:start_ts="1333115998">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1332975985" xil_pn:in_ck="-4177847064657889201" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1332975985">
+    <transform xil_pn:end_ts="1333116287" xil_pn:in_ck="6310421515407944547" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1333116287">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="Alu.vhd"/>
       <outfile xil_pn:name="Multiplexer2_1.vhd"/>
+      <outfile xil_pn:name="TriStateBuffer.vhd"/>
       <outfile xil_pn:name="pkgOpenCPU32.vhd"/>
       <outfile xil_pn:name="testAlu.vhd"/>
       <outfile xil_pn:name="testMultiplexer2_1.vhd"/>
+      <outfile xil_pn:name="testTriStateBuffer.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1332975952" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-5560548389496876941" xil_pn:start_ts="1332975952">
+    <transform xil_pn:end_ts="1333116287" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="5051190120110013325" xil_pn:start_ts="1333116287">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1332975952" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="4712046104738671925" xil_pn:start_ts="1332975952">
+    <transform xil_pn:end_ts="1333116287" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="6144079622853425871" xil_pn:start_ts="1333116287">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1332975281" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="6711552298331853320" xil_pn:start_ts="1332975281">
+    <transform xil_pn:end_ts="1333115998" xil_pn:name="TRAN_regenerateCoresSim" xil_pn:prop_ck="6711552298331853320" xil_pn:start_ts="1333115998">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1332975985" xil_pn:in_ck="-4177847064657889201" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1332975985">
+    <transform xil_pn:end_ts="1333116287" xil_pn:in_ck="6310421515407944547" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1333116287">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="Alu.vhd"/>
       <outfile xil_pn:name="Multiplexer2_1.vhd"/>
+      <outfile xil_pn:name="TriStateBuffer.vhd"/>
       <outfile xil_pn:name="pkgOpenCPU32.vhd"/>
       <outfile xil_pn:name="testAlu.vhd"/>
       <outfile xil_pn:name="testMultiplexer2_1.vhd"/>
+      <outfile xil_pn:name="testTriStateBuffer.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1332975987" xil_pn:in_ck="-4177847064657889201" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="6766024878768186600" xil_pn:start_ts="1332975985">
+    <transform xil_pn:end_ts="1333116288" xil_pn:in_ck="6310421515407944547" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-4911544397197351281" xil_pn:start_ts="1333116287">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="TriStateBuffer_beh.prj"/>
+      <outfile xil_pn:name="TriStateBuffer_isim_beh.exe"/>
       <outfile xil_pn:name="fuse.log"/>
       <outfile xil_pn:name="isim"/>
-      <outfile xil_pn:name="testMultiplexer2_1_beh.prj"/>
-      <outfile xil_pn:name="testMultiplexer2_1_isim_beh.exe"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1332975988" xil_pn:in_ck="2507770055730146729" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="8032999008259990405" xil_pn:start_ts="1332975987">
+    <transform xil_pn:end_ts="1333116288" xil_pn:in_ck="-7971658627700057290" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-2498771775477111924" xil_pn:start_ts="1333116288">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="TriStateBuffer_isim_beh.wdb"/>
       <outfile xil_pn:name="isim.cmd"/>
-      <outfile xil_pn:name="testMultiplexer2_1_isim_beh.wdb"/>
     </transform>
     <transform xil_pn:end_ts="1332968178" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1332968178">
       <status xil_pn:value="SuccessfullyRun"/>
@@ -170,16 +178,11 @@
     <transform xil_pn:end_ts="1332975190" xil_pn:in_ck="8015792819232243152" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-7037618392410294555" xil_pn:start_ts="1332975185">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <outfile xil_pn:name=".lso"/>
-      <outfile xil_pn:name="Multiplexer2_1.lso"/>
-      <outfile xil_pn:name="Multiplexer2_1.ngc"/>
-      <outfile xil_pn:name="Multiplexer2_1.ngr"/>
-      <outfile xil_pn:name="Multiplexer2_1.prj"/>
-      <outfile xil_pn:name="Multiplexer2_1.stx"/>
-      <outfile xil_pn:name="Multiplexer2_1.syr"/>
-      <outfile xil_pn:name="Multiplexer2_1.xst"/>
-      <outfile xil_pn:name="Multiplexer2_1_vhdl.prj"/>
-      <outfile xil_pn:name="Multiplexer2_1_xst.xrpt"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputAdded"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputRemoved"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="webtalk_pn.xml"/>
       <outfile xil_pn:name="xst"/>

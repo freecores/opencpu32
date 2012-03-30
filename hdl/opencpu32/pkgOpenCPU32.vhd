@@ -11,6 +11,7 @@ package pkgOpenCPU32 is
 constant nBits		: integer := 32;
 
 type aluOps is (alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, alu_xor, alu_not);
+type typeEnDis is (enable, disable);
 
 end pkgOpenCPU32;
 
