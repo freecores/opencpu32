@@ -49,6 +49,7 @@ BEGIN
 
    --! Process that will stimulate all of the Alu operations
    stim_proc: process
+	variable mulResult : std_logic_vector(((nBits*2) - 1)downto 0);
    begin		      
       -- Pass ---------------------------------------------------------------------------
 		wait for 1 ps;
@@ -56,7 +57,51 @@ BEGIN
 		sel <= alu_pass;
 		A <= conv_std_logic_vector(22, nBits);
 		wait for 1 ns;  -- Wait to stabilize the response
-		assert S = (A ) report "Invalid Pass output" severity FAILURE;		
+		assert S = (A ) report "Invalid Pass output" severity FAILURE;	
+
+		-- Sum ---------------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Sum without carry 12 AND 13" SEVERITY NOTE;
+		sel <= alu_sum;
+		A <= conv_std_logic_vector(12, nBits);
+		B <= conv_std_logic_vector(13, nBits);		
+		wait for 1 ns;  -- Wait to stabilize the response	
+		assert S = (A + B) report "Invalid Sum output" severity FAILURE;
+
+		-- Sub ---------------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Sub without carry 34 AND 30" SEVERITY NOTE;
+		sel <= alu_sub;
+		A <= conv_std_logic_vector(34, nBits);
+		B <= conv_std_logic_vector(30, nBits);		
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = (A - B) report "Invalid Sum Sub" severity FAILURE;		
+		
+		-- Inc ---------------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Inc without carry 1" SEVERITY NOTE;
+		sel <= alu_inc;
+		A <= conv_std_logic_vector(1, nBits);
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = (A + 1) report "Invalid Sum Sub" severity FAILURE;
+
+		-- Dec ---------------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Dec without carry 1" SEVERITY NOTE;
+		sel <= alu_dec;
+		A <= conv_std_logic_vector(1, nBits);
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = (A - 1) report "Invalid Sum Sub" severity FAILURE;		
+		
+		-- Mul ---------------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Sub without carry 34 AND 30" SEVERITY NOTE;
+		sel <= alu_mul;
+		A <= conv_std_logic_vector(3, nBits);
+		B <= conv_std_logic_vector(5, nBits);		
+		wait for 1 ns;  -- Wait to stabilize the response
+		mulResult := (A * B);
+		assert S = (mulResult((nBits - 1) downto 0)) report "Invalid Sum Sub" severity FAILURE;		
 		
 		-- AND ---------------------------------------------------------------------------
 		wait for 1 ps;

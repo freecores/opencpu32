@@ -29,6 +29,7 @@ architecture Behavioral of Alu is
 begin
 	--! Behavior description of combinational circuit (Can not infer any FF(Flip flop)) of the Alu
 	process (A,B,sel) is
+	variable mulResult : std_logic_vector(((nBits*2) - 1)downto 0);
 	begin
 		case sel is
 			when alu_pass =>
@@ -53,7 +54,8 @@ begin
 			
 			when alu_mul =>
 				--Multiplication operation
-				S <= A * B;
+				mulResult := A * B;
+				S <= mulResult((nBits - 1) downto 0);
 				
 			when alu_and =>
 				--And operation
