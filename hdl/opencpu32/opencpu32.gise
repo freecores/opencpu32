@@ -198,7 +198,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1333312118" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1333312118">
+    <transform xil_pn:end_ts="1333313819" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1333313819">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="Alu.vhd"/>
@@ -225,7 +225,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1333312118" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1333312118">
+    <transform xil_pn:end_ts="1333313819" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1333313819">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="Alu.vhd"/>
@@ -240,7 +240,7 @@
       <outfile xil_pn:name="testRegisterFile.vhd"/>
       <outfile xil_pn:name="testTriStateBuffer.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1333312121" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="4679725895911349372" xil_pn:start_ts="1333312118">
+    <transform xil_pn:end_ts="1333313822" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="4679725895911349372" xil_pn:start_ts="1333313819">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="fuse.log"/>
@@ -250,7 +250,7 @@
       <outfile xil_pn:name="testDataPath_isim_beh.exe"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1333312121" xil_pn:in_ck="1382727828177144057" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-6046575149236642790" xil_pn:start_ts="1333312121">
+    <transform xil_pn:end_ts="1333313822" xil_pn:in_ck="1382727828177144057" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-6046575149236642790" xil_pn:start_ts="1333313822">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="isim.cmd"/>
@@ -289,6 +289,8 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name=".lso"/>
       <outfile xil_pn:name="Alu.ngr"/>
       <outfile xil_pn:name="DataPath.lso"/>
@@ -308,6 +310,49 @@
     <transform xil_pn:end_ts="1333275886" xil_pn:in_ck="3590950097743327443" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="2103587220659863231" xil_pn:start_ts="1333275886">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+    </transform>
+    <transform xil_pn:end_ts="1333313090" xil_pn:in_ck="5818751108950590646" xil_pn:name="TRANEXT_ngdbuild_FPGA" xil_pn:prop_ck="-6459960163180547905" xil_pn:start_ts="1333313086">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="DataPath.bld"/>
+      <outfile xil_pn:name="DataPath.ngd"/>
+      <outfile xil_pn:name="DataPath_ngdbuild.xrpt"/>
+      <outfile xil_pn:name="_ngo"/>
+      <outfile xil_pn:name="_xmsgs/ngdbuild.xmsgs"/>
+    </transform>
+    <transform xil_pn:end_ts="1333313093" xil_pn:in_ck="6378258571090198326" xil_pn:name="TRANEXT_map_spartan3" xil_pn:prop_ck="-5849673150125579957" xil_pn:start_ts="1333313090">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="DataPath.pcf"/>
+      <outfile xil_pn:name="DataPath_map.map"/>
+      <outfile xil_pn:name="DataPath_map.mrp"/>
+      <outfile xil_pn:name="DataPath_map.ncd"/>
+      <outfile xil_pn:name="DataPath_map.ngm"/>
+      <outfile xil_pn:name="DataPath_map.xrpt"/>
+      <outfile xil_pn:name="DataPath_summary.xml"/>
+      <outfile xil_pn:name="DataPath_usage.xml"/>
+      <outfile xil_pn:name="_xmsgs/map.xmsgs"/>
+    </transform>
+    <transform xil_pn:end_ts="1333313105" xil_pn:in_ck="1391319997921572097" xil_pn:name="TRANEXT_par_spartan3" xil_pn:prop_ck="-5563652517805085498" xil_pn:start_ts="1333313093">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="DataPath.ncd"/>
+      <outfile xil_pn:name="DataPath.pad"/>
+      <outfile xil_pn:name="DataPath.par"/>
+      <outfile xil_pn:name="DataPath.ptwx"/>
+      <outfile xil_pn:name="DataPath.unroutes"/>
+      <outfile xil_pn:name="DataPath.xpi"/>
+      <outfile xil_pn:name="DataPath_pad.csv"/>
+      <outfile xil_pn:name="DataPath_pad.txt"/>
+      <outfile xil_pn:name="DataPath_par.xrpt"/>
+      <outfile xil_pn:name="_xmsgs/par.xmsgs"/>
+    </transform>
+    <transform xil_pn:end_ts="1333313105" xil_pn:in_ck="5377621607441972138" xil_pn:name="TRAN_postRouteTrce" xil_pn:prop_ck="445577401284416186" xil_pn:start_ts="1333313103">
+      <status xil_pn:value="SuccessfullyRun"/>
+      <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="DataPath.twr"/>
+      <outfile xil_pn:name="DataPath.twx"/>
+      <outfile xil_pn:name="_xmsgs/trce.xmsgs"/>
     </transform>
   </transforms>
 

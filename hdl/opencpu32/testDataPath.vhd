@@ -136,6 +136,7 @@ BEGIN
 		regFileEnA <= '0';
 		outEn <= disable;
 		
+		
 		-- MOV r2,r1 (r2 <= r1) --------------------------------------------------------------------
 		REPORT "MOV r2,r1" SEVERITY NOTE;
 		regFileReadAddrB <= r1;	-- Read data from r1 
@@ -157,6 +158,7 @@ BEGIN
 		muxSel <= (others => 'U');
 		regFileEnA <= '0';
 		outEn <= disable;
+		wait for 1 ns;	-- Finish test case
 		
 		-- ADD r2,r0 (r2 <= r2+r0)
 		REPORT "ADD r2,r0" SEVERITY NOTE;
@@ -181,6 +183,34 @@ BEGIN
 		wait for 1 ns;	-- Finish test case
 		muxSel <= (others => 'U');
 		regFileEnA <= '0';
+		regFileEnB <= '0';
+		outEn <= disable;
+		wait for 1 ns;	-- If you don't use this wait the signals will not change...! (Take care of this when implementing the ControlUnit)
+		
+		-- ADD r3,r2,r0 (r3 <= r2+r0)
+		REPORT "ADD r3,r2,r0" SEVERITY NOTE;
+		regFileReadAddrA <= r2;	-- Read data from r2
+		regFileEnA <= '1';		
+		regFileReadAddrB <= r0;	-- Read data from r0 
+		regFileEnB <= '1';
+		aluOp <= alu_sum;				
+		regFileWriteAddr <= r3; -- Write data in r2
+		muxSel <= muxPos(fromAlu);	-- Select the Alu output
+		regFileWriteEn <= '1';
+		wait for CLK_period;    -- Wait for clock cycle to write into r2
+		-- Read value in r2 to verify if is equal to 30(10+20)
+		regFileWriteEn <= '0';
+		inputImm <= (others => 'U');
+		muxSel <= muxPos(fromRegFileB);	-- Must access from other Port otherwise you will need an extra cycle to change it's address
+		regFileReadAddrB <= r3;	-- Read data from r0 and verify if it's 10
+		regFileEnB <= '1';
+		outEn <= enable;
+		wait for 1 ns;	-- Wait for data to settle
+		assert outputDp = conv_std_logic_vector(40, nBits) report "Invalid value" severity FAILURE;
+		wait for 1 ns;	-- Finish test case
+		muxSel <= (others => 'U');
+		regFileEnA <= '0';
+		regFileEnB <= '0';
 		outEn <= disable;
 		
 
