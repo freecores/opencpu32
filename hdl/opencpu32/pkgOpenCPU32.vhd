@@ -17,18 +17,33 @@ constant nBits		: integer := 32;
 --! Number of general registers (r0..r15)
 constant numGenRegs : integer := 16;
 
-type aluOps is (alu_pass, alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, 
+type aluOps is (alu_pass, alu_passB, alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, 
 	alu_xor, alu_not, alu_shfLt, alu_shfRt, alu_roLt, alu_roRt);
 type typeEnDis is (enable, disable);
 type generalRegisters is (r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15);
+type dpMuxInputs is (fromMemory, fromImediate, fromRegFileA, fromRegFileB, fromAlu);
 
 function reg2Num (a: generalRegisters) return integer;
 function Num2reg (a: integer) return generalRegisters;
+function muxPos( a: dpMuxInputs) return std_logic_vector;
 
 end pkgOpenCPU32;
 
 --! Define functions or procedures
 package body pkgOpenCPU32 is
+
+function muxPos( a: dpMuxInputs) return std_logic_vector is
+variable valRet : std_logic_vector(2 downto 0); 
+begin
+	case a is
+		when fromMemory => valRet := "000";
+		when fromImediate => valRet := "001";
+		when fromRegFileA => valRet := "010";
+		when fromRegFileB => valRet := "011";
+		when fromAlu => valRet := "100";
+	end case;
+	return valRet;
+end muxPos;
 
 function reg2Num (a: generalRegisters) return integer is
   variable valRet : integer; 

@@ -36,6 +36,10 @@ begin
 				--Pass operation
 				S <= A;
 			
+			when alu_passB =>
+				--Pass operation
+				S <= B;
+			
 			when alu_sum =>
 				--Sum operation
 				S <= A + B;

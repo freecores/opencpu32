@@ -101,8 +101,8 @@ begin
 	
 	--! Instantiate the Unit Under Test (Alu) (Doxygen bug if it's not commented!)
    uAlu: Alu PORT MAP (
-          A => muxOut,
-          B => regFilePortA,
+          A => regFilePortA,
+          B => regFilePortB,
           S => aluOut,
           sel => aluOp
         );

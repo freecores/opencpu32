@@ -1,5 +1,5 @@
 --! @file
---! @brief Testbench for Alu
+--! @brief Testbench for Datapath
 
 --! Use standard library and import the packages (std_logic_1164,std_logic_unsigned,std_logic_arith)
 library IEEE;
@@ -13,8 +13,8 @@ use work.pkgOpenCPU32.all;
 ENTITY testDataPath IS
 END testDataPath;
  
---! @brief Alu Testbench file
---! @details Exercise each Alu operation to verify if the description work as planned 
+--! @brief Datapath Testbench file
+--! @details Attention to this testbench because it will give you hints on how the control circuit must work....
 --! for more information: http://vhdlguru.blogspot.com/2010/03/how-to-write-testbench.html
 ARCHITECTURE behavior OF testDataPath IS 
      
@@ -39,16 +39,16 @@ ARCHITECTURE behavior OF testDataPath IS
     
 
    --Inputs
-   signal inputMm : std_logic_vector(31 downto 0) := (others => '0');	--! Wire to connect Test signal to component
-   signal inputImm : std_logic_vector(31 downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal inputMm : std_logic_vector(31 downto 0) := (others => 'U');	--! Wire to connect Test signal to component
+   signal inputImm : std_logic_vector(31 downto 0) := (others => 'U');	--! Wire to connect Test signal to component
    signal clk : std_logic := '0';													--! Wire to connect Test signal to component
-   signal outEn : std_logic := '0';													--! Wire to connect Test signal to component
-   signal aluOp : std_logic := '0';													--! Wire to connect Test signal to component
-   signal muxSel : std_logic_vector(2 downto 0) := (others => '0');		--! Wire to connect Test signal to component
-   signal regFileWriteAddr : std_logic := '0';									--! Wire to connect Test signal to component
+   signal outEn : typeEnDis := disable;											--! Wire to connect Test signal to component
+   signal aluOp : aluOps := alu_pass;												--! Wire to connect Test signal to component
+   signal muxSel : std_logic_vector(2 downto 0) := (others => 'U');		--! Wire to connect Test signal to component
+   signal regFileWriteAddr : generalRegisters := r0;							--! Wire to connect Test signal to component
    signal regFileWriteEn : std_logic := '0';										--! Wire to connect Test signal to component
-   signal regFileReadAddrA : std_logic := '0';									--! Wire to connect Test signal to component
-   signal regFileReadAddrB : std_logic := '0';									--! Wire to connect Test signal to component
+   signal regFileReadAddrA : generalRegisters := r0;							--! Wire to connect Test signal to component
+	signal regFileReadAddrB : generalRegisters := r0;							--! Wire to connect Test signal to component   
    signal regFileEnA : std_logic := '0';											--! Wire to connect Test signal to component
    signal regFileEnB : std_logic := '0';											--! Wire to connect Test signal to component
 
@@ -56,6 +56,8 @@ ARCHITECTURE behavior OF testDataPath IS
    signal outputDp : std_logic_vector(31 downto 0);							--! Wire to connect Test signal to component
    signal dpFlags : std_logic_vector(31 downto 0);								--! Wire to connect Test signal to component
    
+	-- Clock period definitions
+   constant CLK_period : time := 10 ns;
  
 BEGIN
  
@@ -76,15 +78,115 @@ BEGIN
           outputDp => outputDp,
           dpFlags => dpFlags
         );
+	
+	-- Clock process definitions
+   CLK_process :process
+   begin
+                CLK <= '0';
+                wait for CLK_period/2;
+                CLK <= '1';
+                wait for CLK_period/2;
+   end process;
   
    -- Stimulus process
    stim_proc: process
    begin		
-      
+      -- MOV r0,10d ---------------------------------------------------------------------------------
+		REPORT "MOV r0,10" SEVERITY NOTE;
+		inputImm <= conv_std_logic_vector(10, nBits);
+		regFileWriteAddr <= r0;
+      aluOp <= alu_pass;
+		muxSel <= muxPos(fromImediate);
+		regFileWriteEn <= '1';
+		wait for CLK_period;    -- Wait for clock cycle to latch some data to the register file
+		-- Read value in r0 to verify if is equal to 20
+		regFileWriteEn <= '0';
+		inputImm <= (others => 'U');
+		muxSel <= muxPos(fromRegFileA);
+		regFileReadAddrA <= r0;	-- Read data from r0 and verify if it's 10
+		regFileEnA <= '1';
+		outEn <= enable;
+		wait for 1 ns;	-- Wait for data to settle
+		assert outputDp = conv_std_logic_vector(10, nBits) report "Invalid value" severity FAILURE;
+		wait for 1 ns;	-- Finish test case
+		muxSel <= (others => 'U');
+		regFileEnA <= '0';
+		outEn <= disable;
+		
+		
+		-- MOV r1,20d ---------------------------------------------------------------------------------
+		REPORT "MOV r1,20" SEVERITY NOTE;
+		inputImm <= conv_std_logic_vector(20, nBits);
+		regFileWriteAddr <= r1;
+      aluOp <= alu_pass;
+		muxSel <= muxPos(fromImediate);
+		regFileWriteEn <= '1';
+		wait for CLK_period;    -- Wait for clock cycle to latch some data to the register file
+		-- Read value in r1 to verify if is equal to 20
+		regFileWriteEn <= '0';
+		inputImm <= (others => 'U');
+		muxSel <= muxPos(fromRegFileA);
+		regFileReadAddrA <= r1;	-- Read data from r0 and verify if it's 10
+		regFileEnA <= '1';
+		outEn <= enable;
+		wait for 1 ns;	-- Wait for data to settle
+		assert outputDp = conv_std_logic_vector(20, nBits) report "Invalid value" severity FAILURE;
+		wait for 1 ns;	-- Finish test case
+		muxSel <= (others => 'U');
+		regFileEnA <= '0';
+		outEn <= disable;
+		
+		-- MOV r2,r1 (r2 <= r1) --------------------------------------------------------------------
+		REPORT "MOV r2,r1" SEVERITY NOTE;
+		regFileReadAddrB <= r1;	-- Read data from r1 
+		regFileEnB <= '1';		
+		regFileWriteAddr <= r2; -- Write data in r2
+		muxSel <= muxPos(fromRegFileB);	-- Select the PortB output from regFile
+		regFileWriteEn <= '1';
+		wait for CLK_period;    -- Wait for clock cycle to write into r2
+		-- Read value in r2 to verify if is equal to r1(20)
+		regFileWriteEn <= '0';
+		inputImm <= (others => 'U');
+		muxSel <= muxPos(fromRegFileA);
+		regFileReadAddrA <= r2;	-- Read data from r0 and verify if it's 10
+		regFileEnA <= '1';
+		outEn <= enable;
+		wait for 1 ns;	-- Wait for data to settle
+		assert outputDp = conv_std_logic_vector(20, nBits) report "Invalid value" severity FAILURE;
+		wait for 1 ns;	-- Finish test case
+		muxSel <= (others => 'U');
+		regFileEnA <= '0';
+		outEn <= disable;
+		
+		-- ADD r2,r0 (r2 <= r2+r0)
+		REPORT "ADD r2,r0" SEVERITY NOTE;
+		regFileReadAddrA <= r2;	-- Read data from r2
+		regFileEnA <= '1';		
+		regFileReadAddrB <= r0;	-- Read data from r0 
+		regFileEnB <= '1';
+		aluOp <= alu_sum;				
+		regFileWriteAddr <= r2; -- Write data in r2
+		muxSel <= muxPos(fromAlu);	-- Select the Alu output
+		regFileWriteEn <= '1';
+		wait for CLK_period;    -- Wait for clock cycle to write into r2
+		-- Read value in r2 to verify if is equal to 30(10+20)
+		regFileWriteEn <= '0';
+		inputImm <= (others => 'U');
+		muxSel <= muxPos(fromRegFileB);	-- Must access from other Port otherwise you will need an extra cycle to change it's address
+		regFileReadAddrB <= r2;	-- Read data from r0 and verify if it's 10
+		regFileEnB <= '1';
+		outEn <= enable;
+		wait for 1 ns;	-- Wait for data to settle
+		assert outputDp = conv_std_logic_vector(30, nBits) report "Invalid value" severity FAILURE;
+		wait for 1 ns;	-- Finish test case
+		muxSel <= (others => 'U');
+		regFileEnA <= '0';
+		outEn <= disable;
+		
 
-      -- insert stimulus here 
-
-      wait;
+      -- Finish simulation
+		assert false report "NONE. End of simulation." severity failure;
+		wait;
    end process;
 
 END;
