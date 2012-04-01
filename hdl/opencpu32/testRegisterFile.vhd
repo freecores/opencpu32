@@ -111,7 +111,10 @@ BEGIN
 		
 		-- Mark read B end
 		Read_B_En <= 'X';
-      wait;
+      
+		
+		-- Finish simulation
+		assert false report "NONE. End of simulation." severity failure;
    end process;
 
 END;

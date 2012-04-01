@@ -139,7 +139,8 @@ BEGIN
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert S = (not A) report "Invalid NOT output" severity FAILURE;
 
-      wait;
+      -- Finish simulation
+		assert false report "NONE. End of simulation." severity failure;
    end process;
 
 END;

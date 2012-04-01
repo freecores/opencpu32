@@ -64,7 +64,8 @@ BEGIN
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert S = (conv_std_logic_vector(10, nBits)) report "Output should be high impedance..." severity FAILURE;		     
 
-      wait;
+      -- Finish simulation
+		assert false report "NONE. End of simulation." severity failure;
    end process;
 
 END;

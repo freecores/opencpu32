@@ -141,7 +141,10 @@
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testAlu_isim_beh.exe"/>
     <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="testAlu_isim_beh.wdb"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testMultiplexer2_1_isim_beh.exe"/>
+    <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testMultiplexer4_1_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="testRegisterFile_beh.prj"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testRegisterFile_isim_beh.exe"/>
+    <file xil_pn:fileType="FILE_ISIM_MISC" xil_pn:name="testRegisterFile_isim_beh.wdb"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_ISIM_EXE" xil_pn:name="testTriStateBuffer_isim_beh.exe"/>
     <file xil_pn:fileType="FILE_FITTER_REPORT" xil_pn:name="webtalk_pn.xml"/>
     <file xil_pn:branch="BehavioralSim" xil_pn:fileType="FILE_INI" xil_pn:name="xilinxsim.ini"/>
@@ -154,26 +157,26 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1333221390" xil_pn:in_ck="5896367260640228155" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1333221390">
+    <transform xil_pn:end_ts="1333269930" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1333269930">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="Alu.vhd"/>
       <outfile xil_pn:name="DataPath.vhd"/>
-      <outfile xil_pn:name="Multiplexer2_1.vhd"/>
+      <outfile xil_pn:name="Multiplexer4_1.vhd"/>
       <outfile xil_pn:name="RegisterFile.vhd"/>
       <outfile xil_pn:name="TriStateBuffer.vhd"/>
       <outfile xil_pn:name="pkgOpenCPU32.vhd"/>
       <outfile xil_pn:name="testAlu.vhd"/>
       <outfile xil_pn:name="testDataPath.vhd"/>
-      <outfile xil_pn:name="testMultiplexer2_1.vhd"/>
+      <outfile xil_pn:name="testMultiplexer4_1.vhd"/>
       <outfile xil_pn:name="testRegisterFile.vhd"/>
       <outfile xil_pn:name="testTriStateBuffer.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1333221353" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-3798934868497889219" xil_pn:start_ts="1333221353">
+    <transform xil_pn:end_ts="1333269950" xil_pn:name="TRAN_xawsToSimhdl" xil_pn:prop_ck="-892635403352863368" xil_pn:start_ts="1333269950">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1333221353" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="-6007724738129030273" xil_pn:start_ts="1333221353">
+    <transform xil_pn:end_ts="1333269950" xil_pn:name="TRAN_schematicsToHdlSim" xil_pn:prop_ck="-7876831410930882182" xil_pn:start_ts="1333269950">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
@@ -181,33 +184,37 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1333221390" xil_pn:in_ck="5896367260640228155" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1333221390">
+    <transform xil_pn:end_ts="1333269930" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1333269930">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
       <outfile xil_pn:name="Alu.vhd"/>
       <outfile xil_pn:name="DataPath.vhd"/>
-      <outfile xil_pn:name="Multiplexer2_1.vhd"/>
+      <outfile xil_pn:name="Multiplexer4_1.vhd"/>
       <outfile xil_pn:name="RegisterFile.vhd"/>
       <outfile xil_pn:name="TriStateBuffer.vhd"/>
       <outfile xil_pn:name="pkgOpenCPU32.vhd"/>
       <outfile xil_pn:name="testAlu.vhd"/>
       <outfile xil_pn:name="testDataPath.vhd"/>
-      <outfile xil_pn:name="testMultiplexer2_1.vhd"/>
+      <outfile xil_pn:name="testMultiplexer4_1.vhd"/>
       <outfile xil_pn:name="testRegisterFile.vhd"/>
       <outfile xil_pn:name="testTriStateBuffer.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1333221392" xil_pn:in_ck="5896367260640228155" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="4679725895911349372" xil_pn:start_ts="1333221390">
-      <status xil_pn:value="FailedRun"/>
+    <transform xil_pn:end_ts="1333269952" xil_pn:in_ck="2444604816064773119" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="3692595343167413970" xil_pn:start_ts="1333269950">
+      <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <outfile xil_pn:name="fuse.log"/>
+      <outfile xil_pn:name="isim"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="testAlu_beh.prj"/>
+      <outfile xil_pn:name="testAlu_isim_beh.exe"/>
+      <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1333153231" xil_pn:in_ck="5430170344901993917" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-5331297572704317690" xil_pn:start_ts="1333153230">
-      <status xil_pn:value="AbortedRun"/>
+    <transform xil_pn:end_ts="1333269953" xil_pn:in_ck="2214679574356920708" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="-5331297572704317690" xil_pn:start_ts="1333269952">
+      <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForProperties"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
-      <status xil_pn:value="OutOfDateForced"/>
-      <status xil_pn:value="InputRemoved"/>
+      <outfile xil_pn:name="isim.cmd"/>
+      <outfile xil_pn:name="isim.log"/>
+      <outfile xil_pn:name="testAlu_isim_beh.wdb"/>
     </transform>
     <transform xil_pn:end_ts="1332968178" xil_pn:name="TRAN_copyInitialToXSTAbstractSynthesis" xil_pn:start_ts="1332968178">
       <status xil_pn:value="SuccessfullyRun"/>
@@ -242,21 +249,11 @@
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputAdded"/>
       <status xil_pn:value="InputChanged"/>
-      <outfile xil_pn:name=".lso"/>
-      <outfile xil_pn:name="Alu.lso"/>
-      <outfile xil_pn:name="Alu.ngc"/>
-      <outfile xil_pn:name="Alu.ngr"/>
-      <outfile xil_pn:name="Alu.prj"/>
-      <outfile xil_pn:name="Alu.stx"/>
-      <outfile xil_pn:name="Alu.syr"/>
-      <outfile xil_pn:name="Alu.xst"/>
-      <outfile xil_pn:name="Alu_vhdl.prj"/>
-      <outfile xil_pn:name="Alu_xst.xrpt"/>
-      <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
-      <outfile xil_pn:name="webtalk_pn.xml"/>
-      <outfile xil_pn:name="xst"/>
+      <status xil_pn:value="InputRemoved"/>
+      <status xil_pn:value="OutputRemoved"/>
     </transform>
     <transform xil_pn:end_ts="1333128286" xil_pn:name="TRAN_compileBCD2" xil_pn:prop_ck="-3437821219266902819" xil_pn:start_ts="1333128286">
       <status xil_pn:value="SuccessfullyRun"/>
