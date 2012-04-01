@@ -37,8 +37,96 @@ end DataPath;
 --! @details This description will also show how to instantiate components(Alu, RegisterFile, Multiplexer) on your design
 architecture Behavioral of DataPath is
 
-begin
+--! Component declaration to instantiate the Multiplexer circuit
+COMPONENT Multiplexer4_1
+	generic (n : integer := nBits - 1);					--! Generic value (Used to easily change the size of the Alu on the package)
+	Port ( A   : in  STD_LOGIC_VECTOR (n downto 0);	--! First Input
+		  B   : in  STD_LOGIC_VECTOR (n downto 0);	--! Second Input
+		  C   : in  STD_LOGIC_VECTOR (n downto 0);	--! Third Input
+		  D   : in  STD_LOGIC_VECTOR (n downto 0);	--! Forth Input
+		  E   : in  STD_LOGIC_VECTOR (n downto 0);	--! Fifth Input
+        sel : in  STD_LOGIC_VECTOR (2 downto 0);	--! Select inputs (1, 2, 3, 4, 5)
+		  S   : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
+END COMPONENT;
 
+--! Component declaration to instantiate the Alu circuit
+COMPONENT Alu
+	generic (n : integer := nBits - 1);					--! Generic value (Used to easily change the size of the Alu on the package)
+	Port ( A : in  STD_LOGIC_VECTOR (n downto 0);		--! Alu Operand 1
+		  B : in  STD_LOGIC_VECTOR (n downto 0);		--! Alu Operand 2
+		  S : out  STD_LOGIC_VECTOR (n downto 0);		--! Alu Output
+		  sel : in  aluOps);									--! Select operation
+END COMPONENT;
+
+--! Component declaration to instantiate the testRegisterFile circuit
+COMPONENT RegisterFile
+	generic (n : integer := nBits - 1);						--! Generic value (Used to easily change the size of the registers)
+	Port ( clk : in  STD_LOGIC;								--! Clock signal
+		  writeEn : in  STD_LOGIC;								--! Write enable
+		  writeAddr : in  generalRegisters;					--! Write Adress
+		  input : in  STD_LOGIC_VECTOR (n downto 0);		--! Input 
+		  Read_A_En : in  STD_LOGIC;							--! Enable read A
+		  Read_A_Addr : in  generalRegisters;				--! Read A adress
+		  Read_B_En : in  STD_LOGIC;							--! Enable read A
+		  Read_B_Addr : in  generalRegisters;  			--! Read B adress
+		  A_Out : out  STD_LOGIC_VECTOR (n downto 0);	--! Output A
+		  B_Out : out  STD_LOGIC_VECTOR (n downto 0));	--! Output B
+END COMPONENT;
+
+COMPONENT TriStateBuffer
+	generic (n : integer := nBits - 1);				--! Generic value (Used to easily change the size of the Alu on the package)
+	PORT(         
+		A : IN  std_logic_vector(n downto 0);		--! Buffer Input
+		sel : IN  typeEnDis;								--! Enable or Disable the output
+		S : OUT  std_logic_vector(n downto 0)		--! Enable or Disable the output
+	  );
+END COMPONENT;
+
+-- Signals that will connect the various components from the DataPath
+signal regFilePortA : STD_LOGIC_VECTOR (n downto 0);
+signal regFilePortB : STD_LOGIC_VECTOR (n downto 0);
+signal aluOut 		  : STD_LOGIC_VECTOR (n downto 0);
+signal muxOut 		  : STD_LOGIC_VECTOR (n downto 0);
+begin
+	--! Instantiate Multiplexer
+   uMux: Multiplexer4_1 PORT MAP (
+          A => inputMm,
+          B => inputImm,
+			 C => regFilePortA,
+			 D => regFilePortB,
+			 E => aluOut,
+          sel => muxSel,
+          S => muxOut
+        );
+	
+	--! Instantiate the Unit Under Test (Alu) (Doxygen bug if it's not commented!)
+   uAlu: Alu PORT MAP (
+          A => muxOut,
+          B => regFilePortA,
+          S => aluOut,
+          sel => aluOp
+        );
+	
+	--! Instantiate the Unit Under Test (RegisterFile) (Doxygen bug if it's not commented!)
+   uRegisterFile: RegisterFile PORT MAP (
+          clk => clk,
+          writeEn => regFileWriteEn,
+          writeAddr => regFileWriteAddr,
+          input => muxOut,
+          Read_A_En => regFileEnA,
+          Read_A_Addr => regFileReadAddrA,
+          Read_B_En => regFileEnB,
+          Read_B_Addr => regFileReadAddrB,
+          A_Out => regFilePortA,
+          B_Out => regFilePortB
+        );
+	
+	--!Instantiate the Unit Under Test (Multiplexer2_1) (Doxygen bug if it's not commented!)
+   uTriState: TriStateBuffer PORT MAP (
+          A => muxOut,
+          sel => outEn,
+          S => outputDp
+        );
 
 end Behavioral;
 

@@ -25,7 +25,8 @@ ARCHITECTURE behavior OF testMultiplexer4_1 IS
            B   : in  STD_LOGIC_VECTOR (n downto 0);	--! Second Input
 			  C   : in  STD_LOGIC_VECTOR (n downto 0);	--! Third Input
 			  D   : in  STD_LOGIC_VECTOR (n downto 0);	--! Forth Input
-           sel : in  STD_LOGIC_VECTOR (1 downto 0);	--! Select inputs (1, 2, 3, 4)
+			  E   : in  STD_LOGIC_VECTOR (n downto 0);	--! Fifth Input
+           sel : in  STD_LOGIC_VECTOR (2 downto 0);	--! Select inputs (1, 2, 3, 4, 5)
            S   : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
     END COMPONENT;
     
@@ -35,7 +36,8 @@ ARCHITECTURE behavior OF testMultiplexer4_1 IS
    signal B : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
 	signal C : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
 	signal D : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
-   signal sel : STD_LOGIC_VECTOR (1 downto 0) := "00";							--! Wire to connect Test signal to component
+	signal E : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
+   signal sel : STD_LOGIC_VECTOR (2 downto 0) := "000";							--! Wire to connect Test signal to component
 
  	--Outputs
    signal S : std_logic_vector((nBits - 1) downto 0);   							--! Wire to connect Test signal to component
@@ -48,6 +50,7 @@ BEGIN
           B => B,
 			 C => C,
 			 D => D,
+			 E => E,
           sel => sel,
           S => S
         );
@@ -58,46 +61,62 @@ BEGIN
       -- Sel 0 ---------------------------------------------------------------------------
 		wait for 1 ps;
 		REPORT "Select first channel" SEVERITY NOTE;
-		sel <= "00";
+		sel <= "000";
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
 		D <= conv_std_logic_vector(3000, nBits);		
+		E <= conv_std_logic_vector(4000, nBits);		
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert S = (A) report "Could not select first channel" severity FAILURE;		
 		
 		-- Sel 1 ---------------------------------------------------------------------------
 		wait for 1 ns;
 		REPORT "Select second channel" SEVERITY NOTE;
-		sel <= "01";
+		sel <= "001";
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
 		D <= conv_std_logic_vector(3000, nBits);		
+		E <= conv_std_logic_vector(4000, nBits);		
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert S = (B) report "Could not select second channel" severity FAILURE;
 		
 		-- Sel 2 ---------------------------------------------------------------------------
 		wait for 1 ns;
-		REPORT "Select second channel" SEVERITY NOTE;
-		sel <= "10";
+		REPORT "Select third channel" SEVERITY NOTE;
+		sel <= "010";
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
-		D <= conv_std_logic_vector(3000, nBits);		
+		D <= conv_std_logic_vector(3000, nBits);	
+		E <= conv_std_logic_vector(4000, nBits);				
 		wait for 1 ns;  -- Wait to stabilize the response
-		assert S = (C) report "Could not select second channel" severity FAILURE;
+		assert S = (C) report "Could not select third channel" severity FAILURE;
 		
 		-- Sel 3 ---------------------------------------------------------------------------
 		wait for 1 ns;
-		REPORT "Select second channel" SEVERITY NOTE;
-		sel <= "11";
+		REPORT "Select forth channel" SEVERITY NOTE;
+		sel <= "011";
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
 		D <= conv_std_logic_vector(3000, nBits);		
+		E <= conv_std_logic_vector(4000, nBits);		
 		wait for 1 ns;  -- Wait to stabilize the response
-		assert S = (D) report "Could not select second channel" severity FAILURE;
+		assert S = (D) report "Could not select forth channel" severity FAILURE;
+		
+		-- Sel 4 ---------------------------------------------------------------------------
+		wait for 1 ns;
+		REPORT "Select fifth channel" SEVERITY NOTE;
+		sel <= "100";
+		A <= conv_std_logic_vector(0, nBits);
+		B <= conv_std_logic_vector(1000, nBits);		
+		C <= conv_std_logic_vector(2000, nBits);		
+		D <= conv_std_logic_vector(3000, nBits);		
+		E <= conv_std_logic_vector(4000, nBits);		
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = (E) report "Could not select fifth channel" severity FAILURE;
 		
 		-- Finish simulation
 		assert false report "NONE. End of simulation." severity failure;
