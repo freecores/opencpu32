@@ -17,30 +17,76 @@ use work.pkgOpenCPU32.all;
 
 --! The purpose of datapaths is to provide routes for data to travel between functional units.
 entity ControlUnit is
-    Port ( reset : in  STD_LOGIC;
+    generic (n : integer := nBits - 1);									--! Generic value (Used to easily change the size of the Alu on the package)
+	 Port ( reset : in  STD_LOGIC;
            clk : in  STD_LOGIC;
-           FlagsDp : in  STD_LOGIC_VECTOR (7 downto 0);
-           DataDp : in  STD_LOGIC_VECTOR (7 downto 0);
+           FlagsDp : in  STD_LOGIC_VECTOR (n downto 0);
+           DataDp : in  STD_LOGIC_VECTOR (n downto 0);
            MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);
-           ImmDp : out  STD_LOGIC_VECTOR (7 downto 0);
+           ImmDp : out  STD_LOGIC_VECTOR (n downto 0);
            DpRegFileWriteAddr : out  STD_LOGIC;
            DpRegFileWriteEn : out  STD_LOGIC;
            DpRegFileReadAddrA : out  STD_LOGIC;
            DpRegFileReadAddrB : out  STD_LOGIC;
            DpRegFileReadEnA : out  STD_LOGIC;
            DpRegFileReadEnB : out  STD_LOGIC;
-           MemoryDataInput : in  STD_LOGIC_VECTOR (7 downto 0);
-           MemoryDataAddr : out  STD_LOGIC_VECTOR (7 downto 0);
-           MemoryDataOut : out  STD_LOGIC_VECTOR (7 downto 0));
+           MemoryDataRead   : out std_logic;
+			  MemoryDataWrite  : out std_logic;
+			  MemoryDataInput : in  STD_LOGIC_VECTOR (n downto 0);
+           MemoryDataAddr : out  STD_LOGIC_VECTOR (n downto 0);
+           MemoryDataOut : out  STD_LOGIC_VECTOR (n downto 0));
 end ControlUnit;
 
 --! @brief ControlUnit http://en.wikipedia.org/wiki/Control_unit
 --! @details The control unit receives external instructions or commands which it converts into a sequence of control signals that the control \n
 --! unit applies to data path to implement a sequence of register-transfer level operations.
 architecture Behavioral of ControlUnit is
-
+signal currentCpuState : controlUnitStates;
+signal nextCpuState    : controlUnitStates;
+signal PC              : std_logic_vector(n downto 0);
+signal IR              : std_logic_vector(n downto 0);
 begin
 
+	-- Next state logic
+	process (clk, reset)
+	begin
+		if (reset = '1') then
+			currentCpuState <= initial;
+			MemoryDataAddr <= (others => '0');
+		elsif rising_edge(clk) then
+			currentCpuState <= nextCpuState;
+		end if;
+	end process;
+	
+	-- assd
+	process (currentCpuState)
+	begin
+		case currentCpuState is			
+			-- Initial state left from reset ...
+			when initial =>
+				PC <= (others => '0');
+				MemoryDataRead <= (others => '0');
+				MemoryDataWrite <= (others => '0');
+				MemoryDataAddr <= (others => '0');
+				nextCpuState <= fetch;
+			
+			-- Fetch state (Go to memory and get a instruction)
+			when fetch =>
+				-- Increment program counter (Remember that PC will be update only on the next cycle...
+				PC <= PC + conv_std_logic_vector(1, nBits);
+				MemoryDataAddr <= PC;	-- Warning PC is not 1 yet...
+				IR <= MemoryDataInput;
+				MemoryDataRead <= '1';
+				nextCpuState <= decode;
+			
+			-- Detect with instruction came from memory...
+			when decode =>
+				MemoryDataRead <= '0';
+			
+			when others =>
+				null;
+		end case;
+	end process;
 
 end Behavioral;
 
