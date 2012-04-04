@@ -41,10 +41,11 @@ end ControlUnit;
 --! @details The control unit receives external instructions or commands which it converts into a sequence of control signals that the control \n
 --! unit applies to data path to implement a sequence of register-transfer level operations.
 architecture Behavioral of ControlUnit is
-signal currentCpuState : controlUnitStates;
-signal nextCpuState    : controlUnitStates;
-signal PC              : std_logic_vector(n downto 0);
-signal IR              : std_logic_vector(n downto 0);
+signal currentCpuState : controlUnitStates;					-- CPU states
+signal nextCpuState    : controlUnitStates;					-- CPU states
+signal PC              : std_logic_vector(n downto 0);	-- Program Counter
+signal IR              : std_logic_vector(n downto 0);	-- Intruction register
+signal currInstruction : std_logic_vector(n downto 0);	-- Current Intruction
 begin
 
 	-- Next state logic
@@ -58,13 +59,16 @@ begin
 		end if;
 	end process;
 	
-	-- assd
+	-- States Fetch, decode, execute from the processor
 	process (currentCpuState)
+	variable cyclesExecute : integer range 0 to 20; -- Cycles to wait while executing instruction
 	begin
 		case currentCpuState is			
 			-- Initial state left from reset ...
 			when initial =>
+				cyclesExecute := 0;
 				PC <= (others => '0');
+				IR <= (others => '0');
 				MemoryDataRead <= (others => '0');
 				MemoryDataWrite <= (others => '0');
 				MemoryDataAddr <= (others => '0');
@@ -79,13 +83,37 @@ begin
 				MemoryDataRead <= '1';
 				nextCpuState <= decode;
 			
-			-- Detect with instruction came from memory...
+			-- Detect with instruction came from memory, set the number of cycles to execute...
 			when decode =>
 				MemoryDataRead <= '0';
+				MemoryDataWrite <= '0';
+				
+				-- The high attribute points to the highes bit position
+				case IR((IR'HIGH) downto (IR'HIGH - 5)) is
+					when mov_reg =>
+							nextCpuState <= execute;
+							cyclesExecute := 2;
+							currInstruction <= IR;
+					-- Invalid instruction (Now will be ignored, but latter shoud rais a trap
+					when others =>						
+				end case;
 			
+			-- Wait while the process that handles the execution works..
+			when execute =>
+				if cyclesExecute > 1 then
+					cyclesExecute := cyclesExecute - 1;
+				else 	
+					nextCpuState <= fetch;
+				end if;
 			when others =>
 				null;
 		end case;
+	end process;
+	
+	-- Process that handles the execution of each instruction
+	process (currInstruction)
+	begin
+	
 	end process;
 
 end Behavioral;
