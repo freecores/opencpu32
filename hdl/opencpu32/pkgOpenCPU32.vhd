@@ -26,13 +26,14 @@ type typeEnDis is (enable, disable);
 type generalRegisters is (r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15);
 type dpMuxInputs is (fromMemory, fromImediate, fromRegFileA, fromRegFileB, fromAlu);
 type controlUnitStates is (initial, fetch, decode, execute, executing);
+type executionStates is (s0, s1, s2, s3, s4);
 
 function reg2Num (a: generalRegisters) return integer;
 function Num2reg (a: integer) return generalRegisters;
 function muxPos( a: dpMuxInputs) return std_logic_vector;
 
 -- Opcodes
-subtype opcodes is std_logic_vector(5 downto 0);
+subtype opcodes is std_logic_vector(5 downto 0);	-- 6 Bits (64 instructions max)
 
 -- Each instruction will take 32 bits
 -- Tutorial on using records.. (http://vhdlguru.blogspot.com.br/2010/02/arrays-and-records-in-vhdl.html)

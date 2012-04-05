@@ -41,36 +41,53 @@ end ControlUnit;
 --! @details The control unit receives external instructions or commands which it converts into a sequence of control signals that the control \n
 --! unit applies to data path to implement a sequence of register-transfer level operations.
 architecture Behavioral of ControlUnit is
+
 signal currentCpuState : controlUnitStates;					-- CPU states
 signal nextCpuState    : controlUnitStates;					-- CPU states
+
+signal currentExState  : executionStates;						-- Execution states
+signal nextExState     : executionStates;						-- Execution states
+
 signal PC              : std_logic_vector(n downto 0);	-- Program Counter
 signal IR              : std_logic_vector(n downto 0);	-- Intruction register
 signal currInstruction : std_logic_vector(n downto 0);	-- Current Intruction
 begin
 
-	-- Next state logic
+	-- Next state logic (CPU, fetch, decode, execute states)
 	process (clk, reset)
 	begin
 		if (reset = '1') then
-			currentCpuState <= initial;
-			MemoryDataAddr <= (others => '0');
+			currentCpuState <= initial;			
 		elsif rising_edge(clk) then
 			currentCpuState <= nextCpuState;
+		end if;
+	end process;
+	
+	-- Next state logic (Execution states)
+	process (clk, currentCpuState)
+	begin
+		if (currentCpuState /= execute) and (currentCpuState /= executing) then
+			currentExState <= s0;
+		elsif rising_edge(clk) then
+			currentExState <= nextExState;
 		end if;
 	end process;
 	
 	-- States Fetch, decode, execute from the processor
 	process (currentCpuState)
 	variable cyclesExecute : integer range 0 to 20; -- Cycles to wait while executing instruction
+	variable opcodeIR : std_logic_vector(5 downto 0);
 	begin
+		opcodeIR := IR((IR'HIGH) downto (IR'HIGH - 5));
 		case currentCpuState is			
 			-- Initial state left from reset ...
 			when initial =>
 				cyclesExecute := 0;
 				PC <= (others => '0');
 				IR <= (others => '0');
-				MemoryDataRead <= (others => '0');
-				MemoryDataWrite <= (others => '0');
+				MemoryDataAddr <= (others => '0');
+				MemoryDataRead <= '0';
+				MemoryDataWrite <= '0';
 				MemoryDataAddr <= (others => '0');
 				nextCpuState <= fetch;
 			
@@ -89,31 +106,52 @@ begin
 				MemoryDataWrite <= '0';
 				
 				-- The high attribute points to the highes bit position
-				case IR((IR'HIGH) downto (IR'HIGH - 5)) is
+				case opcodeIR is
 					when mov_reg =>
 							nextCpuState <= execute;
 							cyclesExecute := 2;
 							currInstruction <= IR;
-					-- Invalid instruction (Now will be ignored, but latter shoud rais a trap
+					-- Invalid instruction (Now will be ignored, but latter should raise a trap
 					when others =>						
 				end case;
 			
 			-- Wait while the process that handles the execution works..
 			when execute =>
-				if cyclesExecute > 1 then
-					cyclesExecute := cyclesExecute - 1;
-				else 	
+				if cyclesExecute = 0 then
+					-- Finish the instruction execution get next
 					nextCpuState <= fetch;
-				end if;
+				else
+					nextCpuState <= executing;
+				end if;				
+			
+			-- Just wait a cycle and back again to execute state which verify if still need to wait some cycles
+			when executing =>
+				cyclesExecute := cyclesExecute - 1;				
+				nextCpuState <= execute;
+			
 			when others =>
 				null;
 		end case;
 	end process;
 	
 	-- Process that handles the execution of each instruction
-	process (currInstruction)
+	process (currentExState)	
+	--variable operando1_reg : std_logic_vector(generalRegisters'range);
+	variable opcodeIR : std_logic_vector(5 downto 0);
 	begin
-	
+		opcodeIR := IR((IR'HIGH) downto (IR'HIGH - 5));
+		case currentExState is
+			when s0 =>
+				case opcodeIR is
+					when mov_reg =>
+						null;
+					when others =>
+						null;
+				end case;
+			
+			when others =>
+				null;
+		end case;
 	end process;
 
 end Behavioral;
