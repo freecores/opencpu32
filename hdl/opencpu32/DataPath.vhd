@@ -23,6 +23,7 @@ entity DataPath is
            outEn : in  typeEnDis;											--! Enable/Disable datapath output
            aluOp : in  aluOps;												--! Alu operations
            muxSel : in  STD_LOGIC_VECTOR (2 downto 0);				--! Select inputs from dataPath(Memory,Imediate,RegisterFile,Alu)
+			  muxRegFile : in STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
            regFileWriteAddr : in  generalRegisters;					--! General register write address
            regFileWriteEn : in  STD_LOGIC;								--! RegisterFile write enable signal
            regFileReadAddrA : in  generalRegisters;					--! General register read address (PortA)
@@ -48,6 +49,16 @@ COMPONENT Multiplexer4_1
         sel : in  STD_LOGIC_VECTOR (2 downto 0);	--! Select inputs (1, 2, 3, 4, 5)
 		  S   : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
 END COMPONENT;
+
+--! Component declaration to instantiate the Multiplexer3_1 circuit
+COMPONENT Multiplexer3_1 is
+    generic (n : integer := nBits - 1);					--! Generic value (Used to easily change the size of the Alu on the package)
+	 Port ( A : in  STD_LOGIC_VECTOR (n downto 0);		--! First Input
+           B : in  STD_LOGIC_VECTOR (n downto 0);		--! Second Input
+           C : in  STD_LOGIC_VECTOR (n downto 0);		--! Third Input
+           sel : in  STD_LOGIC_VECTOR(1 downto 0);		--! Select inputs (1, 2, 3)
+           S : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
+end COMPONENT;
 
 --! Component declaration to instantiate the Alu circuit
 COMPONENT Alu
@@ -87,8 +98,9 @@ signal regFilePortA : STD_LOGIC_VECTOR (n downto 0);
 signal regFilePortB : STD_LOGIC_VECTOR (n downto 0);
 signal aluOut 		  : STD_LOGIC_VECTOR (n downto 0);
 signal muxOut 		  : STD_LOGIC_VECTOR (n downto 0);
+signal muxOutReg	  : STD_LOGIC_VECTOR (n downto 0);
 begin
-	--! Instantiate Multiplexer
+	--! Instantiate Multiplexer 5:1
    uMux: Multiplexer4_1 PORT MAP (
           A => inputMm,
           B => inputImm,
@@ -99,9 +111,18 @@ begin
           S => muxOut
         );
 	
+	--! Instantiate Multiplexer 5:1
+   uMux2: Multiplexer3_1 PORT MAP (
+          A => inputMm,
+          B => inputImm,
+			 C => regFilePortA,			 
+          sel => muxRegFile,
+          S => muxOutReg
+        );
+	
 	--! Instantiate the Unit Under Test (Alu) (Doxygen bug if it's not commented!)
    uAlu: Alu PORT MAP (
-          A => regFilePortA,
+          A => muxOutReg,
           B => regFilePortB,
           S => aluOut,
           sel => aluOp

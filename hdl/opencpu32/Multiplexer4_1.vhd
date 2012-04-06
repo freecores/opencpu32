@@ -8,7 +8,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --! Use CPU Definitions package
 use work.pkgOpenCPU32.all;
 
---! Mux 2->1 circuit can select one of the 2 inputs into one output with some selection signal
+--! Mux 5->1 circuit can select one of the 2 inputs into one output with some selection signal
 
 --! Detailed description of this 
 --! mux design element.
