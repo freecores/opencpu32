@@ -29,6 +29,12 @@ type dpMuxAluIn is (fromMemory, fromImediate, fromRegFileA);
 type controlUnitStates is (initial, fetch, decode, execute, executing);
 type executionStates is (initInstructionExecution, writeRegister, releaseWriteRead, s3, s4);
 
+--! Flags positions
+-- Posicoes em bits dos flags (8 bits)
+constant flag_sign         : integer := 2;
+constant flag_zero         : integer := 1;
+constant flag_carry        : integer := 0;
+
 function reg2Num (a: generalRegisters) return integer;
 function Num2reg (a: integer) return generalRegisters;
 function muxPos( a: dpMuxInputs) return std_logic_vector;

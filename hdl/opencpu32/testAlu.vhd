@@ -21,11 +21,12 @@ ARCHITECTURE behavior OF testAlu IS
     
 	 --! Component declaration to instantiate the Alu circuit
     COMPONENT Alu
-    generic (n : integer := nBits - 1);					--! Generic value (Used to easily change the size of the Alu on the package)
-	 Port ( A : in  STD_LOGIC_VECTOR (n downto 0);		--! Alu Operand 1
-           B : in  STD_LOGIC_VECTOR (n downto 0);		--! Alu Operand 2
-           S : out  STD_LOGIC_VECTOR (n downto 0);		--! Alu Output
-           sel : in  aluOps);									--! Select operation
+    generic (n : integer := nBits - 1);						--! Generic value (Used to easily change the size of the Alu on the package)
+	 Port ( A : in  STD_LOGIC_VECTOR (n downto 0);			--! Alu Operand 1
+           B : in  STD_LOGIC_VECTOR (n downto 0);			--! Alu Operand 2
+           S : out  STD_LOGIC_VECTOR (n downto 0);			--! Alu Output
+			  flagsOut : out STD_LOGIC_VECTOR(2 downto 0);	--! Flags from current operation
+           sel : in  aluOps);										--! Select operation								--! Select operation
     END COMPONENT;
     
 
@@ -36,6 +37,7 @@ ARCHITECTURE behavior OF testAlu IS
 
  	--Outputs
    signal S : std_logic_vector((nBits - 1) downto 0);								--! Wire to connect Test signal to component
+	signal flagsOut : std_logic_vector(2 downto 0);									--! Wire to connect Test signal to component
    
 BEGIN
  
@@ -44,6 +46,7 @@ BEGIN
           A => A,
           B => B,
           S => S,
+			 flagsOut => flagsOut,
           sel => sel
         );
 
@@ -138,6 +141,52 @@ BEGIN
 		B <= (others => 'X');		
 		wait for 1 ns;  -- Wait to stabilize the response
 		assert S = (not A) report "Invalid NOT output" severity FAILURE;
+		
+		-- Shift left---------------------------------------------------------------------
+		wait for 1 ns;
+		REPORT "Shift left 2" SEVERITY NOTE;
+		sel <= alu_shfLt;
+		A <= conv_std_logic_vector(2, nBits);
+		B <= (others => 'X');		
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = conv_std_logic_vector(4, nBits) report "Invalid shift left output expected " severity FAILURE;
+		
+		-- Shift right---------------------------------------------------------------------
+		wait for 1 ns;
+		REPORT "Shift right 4" SEVERITY NOTE;
+		sel <= alu_shfRt;
+		A <= conv_std_logic_vector(4, nBits);
+		B <= (others => 'X');		
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert S = conv_std_logic_vector(2, nBits) report "Invalid shift left output expected " severity FAILURE;
+		
+		-- Test flag zero ------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Test zero flag 10 sub 10" SEVERITY NOTE;
+		sel <= alu_sub;
+		A <= conv_std_logic_vector(10, nBits);
+		B <= conv_std_logic_vector(10, nBits);		
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert flagsOut(flag_zero) = '1' report "Invalid zero flag" severity FAILURE;
+		
+		-- Test flag carry ------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Test carry flag 4294967056 sum 4294967056" SEVERITY NOTE;
+		sel <= alu_sum;
+		A <= "11111111111111111111111100010000";
+		B <= "11111111111111111111111100010000";
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert flagsOut(flag_carry) = '1' report "Invalid carry flag" severity FAILURE;
+		
+		-- Test flag sign ------------------------------------------------------------------
+		wait for 1 ps;
+		REPORT "Test sign flag -4 sub 4" SEVERITY NOTE;
+		sel <= alu_sub;
+		A <= conv_std_logic_vector(-4, nBits);
+		B <= conv_std_logic_vector(4, nBits);		
+		wait for 1 ns;  -- Wait to stabilize the response
+		assert flagsOut(flag_sign) = '1' report "Invalid sign flag" severity FAILURE;
+		assert S = conv_std_logic_vector(-8, nBits) report "Invalid Sub" severity FAILURE;
 
       -- Finish simulation
 		assert false report "NONE. End of simulation." severity failure;

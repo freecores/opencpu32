@@ -19,24 +19,24 @@ use work.pkgOpenCPU32.all;
 entity ControlUnit is
     generic (n : integer := nBits - 1);									--! Generic value (Used to easily change the size of the Alu on the package)
 	 Port ( reset : in  STD_LOGIC;
-           clk : in  STD_LOGIC;
-           FlagsDp : in  STD_LOGIC_VECTOR (n downto 0);
-           DataDp : in  STD_LOGIC_VECTOR (n downto 0);
-           MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);
+           clk : in  STD_LOGIC;												--! Main system clock
+           FlagsDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Flags comming from the Datapath
+           DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
+           MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);				--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
 			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
-           ImmDp : out  STD_LOGIC_VECTOR (n downto 0);
+           ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
            DpAluOp : out  aluOps;											--! Alu operations
-			  DpRegFileWriteAddr : out  generalRegisters;
-           DpRegFileWriteEn : out  STD_LOGIC;
-           DpRegFileReadAddrA : out  generalRegisters;
-           DpRegFileReadAddrB : out  generalRegisters;
-           DpRegFileReadEnA : out  STD_LOGIC;
-           DpRegFileReadEnB : out  STD_LOGIC;
-           MemoryDataRead   : out std_logic;
-			  MemoryDataWrite  : out std_logic;
-			  MemoryDataInput : in  STD_LOGIC_VECTOR (n downto 0);
-           MemoryDataAddr : out  STD_LOGIC_VECTOR (n downto 0);
-           MemoryDataOut : out  STD_LOGIC_VECTOR (n downto 0));
+			  DpRegFileWriteAddr : out  generalRegisters;				--! General register address to write
+           DpRegFileWriteEn : out  STD_LOGIC;							--! Enable register write
+           DpRegFileReadAddrA : out  generalRegisters;				--! General register address to read
+           DpRegFileReadAddrB : out  generalRegisters;				--! General register address to read
+           DpRegFileReadEnA : out  STD_LOGIC;							--! Enable register read (PortA)
+           DpRegFileReadEnB : out  STD_LOGIC;							--! Enable register read (PortB)
+           MemoryDataReadEn : out std_logic;								--! Enable Main memory read
+			  MemoryDataWriteEn: out std_logic;								--! Enable Main memory write
+			  MemoryDataInput : in  STD_LOGIC_VECTOR (n downto 0);	--! Incoming data from main memory
+           MemoryDataAddr : out  STD_LOGIC_VECTOR (n downto 0);	--! Main memory write address
+           MemoryDataOut : out  STD_LOGIC_VECTOR (n downto 0));	--! Data to write on main memory
 end ControlUnit;
 
 --! @brief ControlUnit http://en.wikipedia.org/wiki/Control_unit
@@ -88,8 +88,8 @@ begin
 				PC <= (others => '0');
 				IR <= (others => '0');
 				MemoryDataAddr <= (others => '0');
-				MemoryDataRead <= '0';
-				MemoryDataWrite <= '0';
+				MemoryDataReadEn <= '0';
+				MemoryDataWriteEn <= '0';
 				MemoryDataAddr <= (others => '0');
 				nextCpuState <= fetch;
 			
@@ -99,13 +99,13 @@ begin
 				PC <= PC + conv_std_logic_vector(1, nBits);
 				MemoryDataAddr <= PC;	-- Warning PC is not 1 yet...
 				IR <= MemoryDataInput;
-				MemoryDataRead <= '1';
+				MemoryDataReadEn <= '1';
 				nextCpuState <= decode;
 			
 			-- Detect with instruction came from memory, set the number of cycles to execute...
 			when decode =>
-				MemoryDataRead <= '0';
-				MemoryDataWrite <= '0';
+				MemoryDataReadEn <= '0';
+				MemoryDataWriteEn <= '0';
 				
 				-- The high attribute points to the highes bit position
 				case opcodeIR is
