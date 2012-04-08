@@ -35,7 +35,7 @@ ARCHITECTURE behavior OF testDataPath IS
            regFileEnA : in  STD_LOGIC;										--! Enable RegisterFile PortA
            regFileEnB : in  STD_LOGIC;										--! Enable RegisterFile PortB
 			  outputDp : out  STD_LOGIC_VECTOR (n downto 0);			--! DataPath Output
-           dpFlags : out  STD_LOGIC_VECTOR (n downto 0));			--! Alu Flags
+           dpFlags : out  STD_LOGIC_VECTOR (2 downto 0));			--! Alu Flags
     END COMPONENT;
     
 
@@ -56,7 +56,7 @@ ARCHITECTURE behavior OF testDataPath IS
 
  	--Outputs
    signal outputDp : std_logic_vector(31 downto 0);							--! Wire to connect Test signal to component
-   signal dpFlags : std_logic_vector(31 downto 0);								--! Wire to connect Test signal to component
+   signal dpFlags : std_logic_vector(2 downto 0);								--! Wire to connect Test signal to component
    
 	-- Clock period definitions
    constant CLK_period : time := 10 ns;

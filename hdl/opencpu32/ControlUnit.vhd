@@ -75,12 +75,16 @@ begin
 		end if;
 	end process;
 	
-	-- States Fetch, decode, execute from the processor
+	-- States Fetch, decode, execute from the processor (Also handles the execution of jump instructions)
 	process (currentCpuState)
 	variable cyclesExecute : integer range 0 to 20; -- Cycles to wait while executing instruction
 	variable opcodeIR : std_logic_vector(5 downto 0);
+	variable operand_reg1 : std_logic_vector(3 downto 0);
+	variable operand_imm  : std_logic_vector(21 downto 0);
 	begin
 		opcodeIR := IR((IR'HIGH) downto (IR'HIGH - 5));
+		operand_reg1 := IR((IR'HIGH - 6) downto (IR'HIGH - 9));		-- 4 bits register operand1 (Max 16 registers)
+		operand_imm  := IR((IR'HIGH - 10) downto (IR'LOW));			-- 22 bits imediate value (Max value 4194304)
 		case currentCpuState is			
 			-- Initial state left from reset ...
 			when initial =>
@@ -113,12 +117,28 @@ begin
 							nextCpuState <= execute;
 							cyclesExecute := 3;	-- Wait 3 cycles for mov operation
 							currInstruction <= IR;
+					
+					when jmp_val | jmpr_val =>
+						nextCpuState <= execute;
+						cyclesExecute := 1;
+					
 					-- Invalid instruction (Now will be ignored, but latter should raise a trap
 					when others =>						
+						null;
 				end case;
 			
 			-- Wait while the process that handles the execution works..
 			when execute =>
+				-- On the case of jump instructions, it's execution will be handled on this process
+				case opcodeIR is
+					when jmp_val =>
+						PC	<= "0000000000" & operand_imm;
+					when jmpr_val =>
+						PC	<= PC + ("0000000000" & operand_imm);
+					when others =>						
+						null;
+				end case;
+				
 				if cyclesExecute = 0 then
 					-- Finish the instruction execution get next
 					nextCpuState <= fetch;
@@ -136,7 +156,7 @@ begin
 		end case;
 	end process;
 	
-	-- Process that handles the execution of each instruction
+	-- Process that handles the execution of each instruction (Excluding the call and jump instructions)
 	process (currentExState)	
 	--variable operando1_reg : std_logic_vector(generalRegisters'range);
 	variable opcodeIR     : std_logic_vector(5 downto 0);

@@ -31,7 +31,7 @@ entity DataPath is
            regFileEnA : in  STD_LOGIC;										--! Enable RegisterFile PortA
            regFileEnB : in  STD_LOGIC;										--! Enable RegisterFile PortB
 			  outputDp : out  STD_LOGIC_VECTOR (n downto 0);			--! DataPath Output
-           dpFlags : out  STD_LOGIC_VECTOR (n downto 0));			--! Alu Flags
+           dpFlags : out  STD_LOGIC_VECTOR (2 downto 0));			--! Alu Flags
 end DataPath;
 
 --! @brief DataPath http://en.wikipedia.org/wiki/Datapath
@@ -62,11 +62,12 @@ end COMPONENT;
 
 --! Component declaration to instantiate the Alu circuit
 COMPONENT Alu
-	generic (n : integer := nBits - 1);					--! Generic value (Used to easily change the size of the Alu on the package)
+	generic (n : integer := nBits - 1);						--! Generic value (Used to easily change the size of the Alu on the package)
 	Port ( A : in  STD_LOGIC_VECTOR (n downto 0);		--! Alu Operand 1
-		  B : in  STD_LOGIC_VECTOR (n downto 0);		--! Alu Operand 2
-		  S : out  STD_LOGIC_VECTOR (n downto 0);		--! Alu Output
-		  sel : in  aluOps);									--! Select operation
+		  B : in  STD_LOGIC_VECTOR (n downto 0);			--! Alu Operand 2
+		  S : out  STD_LOGIC_VECTOR (n downto 0);			--! Alu Output
+		  flagsOut : out STD_LOGIC_VECTOR(2 downto 0);	--! Flags from current operation
+		  sel : in  aluOps);										--! Select operation
 END COMPONENT;
 
 --! Component declaration to instantiate the testRegisterFile circuit
@@ -125,6 +126,7 @@ begin
           A => muxOutReg,
           B => regFilePortB,
           S => aluOut,
+			 flagsOut => dpFlags,
           sel => aluOp
         );
 	

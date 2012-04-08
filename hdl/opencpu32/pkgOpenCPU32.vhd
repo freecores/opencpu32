@@ -30,7 +30,6 @@ type controlUnitStates is (initial, fetch, decode, execute, executing);
 type executionStates is (initInstructionExecution, writeRegister, releaseWriteRead, s3, s4);
 
 --! Flags positions
--- Posicoes em bits dos flags (8 bits)
 constant flag_sign         : integer := 2;
 constant flag_zero         : integer := 1;
 constant flag_carry        : integer := 0;
@@ -96,8 +95,8 @@ constant inc_reg  : opcodes := conv_std_logic_vector(31,6);  -- Increment regist
 constant dec_reg  : opcodes := conv_std_logic_vector(32,6);  -- Decrement register
 
 -- Control opcodes
-constant nop      : opcodes := conv_std_logic_vector(31,6);  -- Nop...
-constant halt     : opcodes := conv_std_logic_vector(32,6);  -- Halt processor
+constant nop      : opcodes := conv_std_logic_vector(33,6);  -- Nop...
+constant halt     : opcodes := conv_std_logic_vector(34,6);  -- Halt processor
 
 end pkgOpenCPU32;
 
