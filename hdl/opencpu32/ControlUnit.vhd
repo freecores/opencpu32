@@ -20,7 +20,7 @@ entity ControlUnit is
     generic (n : integer := nBits - 1);									--! Generic value (Used to easily change the size of the Alu on the package)
 	 Port ( reset : in  STD_LOGIC;
            clk : in  STD_LOGIC;												--! Main system clock
-           FlagsDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Flags comming from the Datapath
+           FlagsDp : in  STD_LOGIC_VECTOR (2 downto 0);				--! Flags comming from the Datapath
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
            MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);				--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
 			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
@@ -35,7 +35,8 @@ entity ControlUnit is
            MemoryDataReadEn : out std_logic;								--! Enable Main memory read
 			  MemoryDataWriteEn: out std_logic;								--! Enable Main memory write
 			  MemoryDataInput : in  STD_LOGIC_VECTOR (n downto 0);	--! Incoming data from main memory
-           MemoryDataAddr : out  STD_LOGIC_VECTOR (n downto 0);	--! Main memory write address
+           MemoryDataRdAddr : out  STD_LOGIC_VECTOR (n downto 0);	--! Main memory Read address
+			  MemoryDataWrAddr : out  STD_LOGIC_VECTOR (n downto 0);	--! Main memory Write address
            MemoryDataOut : out  STD_LOGIC_VECTOR (n downto 0));	--! Data to write on main memory
 end ControlUnit;
 
@@ -91,17 +92,16 @@ begin
 				cyclesExecute := 0;
 				PC <= (others => '0');
 				IR <= (others => '0');
-				MemoryDataAddr <= (others => '0');
+				MemoryDataRdAddr <= (others => '0');
 				MemoryDataReadEn <= '0';
-				MemoryDataWriteEn <= '0';
-				MemoryDataAddr <= (others => '0');
+				MemoryDataWriteEn <= '0';				
 				nextCpuState <= fetch;
 			
 			-- Fetch state (Go to memory and get a instruction)
 			when fetch =>
 				-- Increment program counter (Remember that PC will be update only on the next cycle...
 				PC <= PC + conv_std_logic_vector(1, nBits);
-				MemoryDataAddr <= PC;	-- Warning PC is not 1 yet...
+				MemoryDataRdAddr <= PC;	-- Warning PC is not 1 yet...
 				IR <= MemoryDataInput;
 				MemoryDataReadEn <= '1';
 				nextCpuState <= decode;
