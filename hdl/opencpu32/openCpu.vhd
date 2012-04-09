@@ -54,6 +54,7 @@ COMPONENT ControlUnit is
            clk : in  STD_LOGIC;												--! Main system clock
            FlagsDp : in  STD_LOGIC_VECTOR (2 downto 0);				--! Flags comming from the Datapath
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
+			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
            MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);				--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
 			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
@@ -111,6 +112,7 @@ begin
 			clk => clk,
 			FlagsDp => dataPathFlags,
 			DataDp => dataPathOutput,
+			outEnDp => enableOutputDp,
 			MuxDp => InputDataPathSelector,
 			MuxRegDp => InputDataPathAluASelector,
 			ImmDp => InputImediate,

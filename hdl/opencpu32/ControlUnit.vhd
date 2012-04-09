@@ -22,6 +22,7 @@ entity ControlUnit is
            clk : in  STD_LOGIC;												--! Main system clock
            FlagsDp : in  STD_LOGIC_VECTOR (2 downto 0);				--! Flags comming from the Datapath
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
+			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
            MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);				--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
 			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
@@ -113,7 +114,7 @@ begin
 				
 				-- The high attribute points to the highes bit position
 				case opcodeIR is
-					when mov_reg | mov_val | add_reg | sub_reg | and_reg | or_reg | xor_reg =>
+					when mov_reg | mov_val | add_reg | sub_reg | and_reg | or_reg | xor_reg | ld_reg | ld_val | stom_reg | stom_val =>
 							nextCpuState <= execute;
 							cyclesExecute := 3;	-- Wait 3 cycles for mov operation
 							currInstruction <= IR;
@@ -131,10 +132,23 @@ begin
 			when execute =>
 				-- On the case of jump instructions, it's execution will be handled on this process
 				case opcodeIR is
+					
 					when jmp_val =>
 						PC	<= "0000000000" & operand_imm;
+					
 					when jmpr_val =>
 						PC	<= PC + ("0000000000" & operand_imm);
+					
+					when ld_val =>
+						MemoryDataRdAddr <= "0000000000" & operand_imm;
+						MemoryDataReadEn <= '1';
+					
+					-- STORE r1,10 (Store the value on r1 in the main memory located at address 10)
+					when stom_val =>
+						MemoryDataWrAddr <= "0000000000" & operand_imm;
+						MemoryDataWriteEn <= '1';
+						MemoryDataOut <= DataDp;
+						
 					when others =>						
 						null;
 				end case;
@@ -156,7 +170,7 @@ begin
 		end case;
 	end process;
 	
-	-- Process that handles the execution of each instruction (Excluding the call and jump instructions)
+	-- Process that handles the execution of each instruction (Excluding the call,jump,load,store instructions)
 	process (currentExState)	
 	--variable operando1_reg : std_logic_vector(generalRegisters'range);
 	variable opcodeIR     : std_logic_vector(5 downto 0);
@@ -181,6 +195,22 @@ begin
 						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));						
 						DpRegFileReadEnB <= '1';
 						nextExState <= writeRegister;
+					
+					-- LOAD r1,10 (Load into r1, the value in the main memory located at address 10)
+					when ld_val =>
+						MuxDp <= muxPos(fromMemory);	
+						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));
+						-- The part that interface with the memory is located on the first process
+						nextExState <= writeRegister;
+					
+					-- STORE r1,10 (Store the value on r1 in the main memory located at address 10)
+					when stom_val =>
+					MuxDp <= muxPos(fromRegFileB);
+					DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));					
+					DpRegFileReadEnB <= '1';
+					nextExState <= readRegisterB;
+					-- The part that interface with the memory is located on the first process
+					nextExState <= readRegisterB;
 					
 					-- ADD r2,r0 (See the testDatapath to see how to drive the datapath for this function)
 					when add_reg | sub_reg | and_reg | or_reg | xor_reg =>
@@ -221,11 +251,22 @@ begin
 				DpRegFileWriteEn <= '1';
 				nextExState <= releaseWriteRead;
 			
+			when readRegisterB =>
+				DpRegFileReadEnB <= '1';
+				outEnDp <= enable;
+				nextExState <= releaseWriteRead;
+			
+			when readRegisterA =>
+				DpRegFileReadEnA <= '1';
+				outEnDp <= enable;
+				nextExState <= releaseWriteRead;
+			
 			-- Release lines (Reset Datapath lines to something that does nothing...)
 			when releaseWriteRead =>
 				DpRegFileReadEnB <= '0';
 				DpRegFileReadEnA <= '0';
 				DpRegFileWriteEn <= '0';
+				outEnDp <= disable;
 			
 			when others =>
 				null;
