@@ -27,7 +27,7 @@ type generalRegisters is (r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15)
 type dpMuxInputs is (fromMemory, fromImediate, fromRegFileA, fromRegFileB, fromAlu);
 type dpMuxAluIn is (fromMemory, fromImediate, fromRegFileA);
 type controlUnitStates is (initial, fetch, decode, execute, executing);
-type executionStates is (initInstructionExecution, writeRegister, releaseWriteRead, readRegisterA, readRegisterB, releaseRead);
+type executionStates is (initInstructionExecution, waitToExecute, writeRegister, releaseWriteRead, readRegisterA, readRegisterB, releaseRead);
 
 --! Flags positions
 constant flag_sign         : integer := 2;

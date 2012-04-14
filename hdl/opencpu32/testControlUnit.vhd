@@ -122,9 +122,23 @@ BEGIN
 		reset <= '0';
 		wait for 2 ns;	     
 
-      -- MOV r0,10d ---------------------------------------------------------------------------------
+      -- MOV r0,10d (Compare control unit outputs with Datapath)--------------------------------------
 		REPORT "MOV r0,10" SEVERITY NOTE;
-		wait for CLK_period;
+		MemoryDataInput <= mov_val & conv_std_logic_vector(reg2Num(r0),4) & conv_std_logic_vector(10, 22);
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		wait for CLK_period;	-- Executing ... 1
+		wait for CLK_period;	-- Executing ... 2
+		
+		-- MOV r1,20d (Compare control unit outputs with Datapath)--------------------------------------
+		REPORT "MOV r1,20" SEVERITY NOTE;
+		MemoryDataInput <= mov_val & conv_std_logic_vector(reg2Num(r1),4) & conv_std_logic_vector(20, 22);
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		wait for CLK_period;	-- Executing ... 1
+		wait for CLK_period;	-- Executing ... 2
 
       wait;
    end process;

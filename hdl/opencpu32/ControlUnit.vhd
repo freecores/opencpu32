@@ -70,7 +70,7 @@ begin
 	-- Next state logic (Execution states)
 	process (clk, currentCpuState)
 	begin
-		if ( (currentCpuState /= execute) and (currentCpuState /= executing) ) then
+		if (reset = '1') then
 			currentExState <= initInstructionExecution;
 		elsif rising_edge(clk) then
 			currentExState <= nextExState;
@@ -187,7 +187,13 @@ begin
 		-- Select the instruction and init it's execution
 		case currentExState is
 			when initInstructionExecution =>
-				case opcodeIR is					
+				nextExState <= waitToExecute;
+			
+			when waitToExecute =>
+				if ( (currentCpuState /= execute) and (currentCpuState /= executing) ) then
+					nextExState <= initInstructionExecution;
+				else
+					case opcodeIR is					
 					-- MOV r2,r1 (See the testDatapath to see how to drive the datapath for this function)
 					when mov_reg =>						
 						MuxDp <= muxPos(fromRegFileB);						
@@ -244,7 +250,8 @@ begin
 					
 					when others =>
 						null;
-				end case;
+					end case;				
+				end if;					
 			
 			-- Write something on the register files
 			when writeRegister =>
@@ -267,6 +274,8 @@ begin
 				DpRegFileReadEnA <= '0';
 				DpRegFileWriteEn <= '0';
 				outEnDp <= disable;
+				-- Come back to waiting state
+				nextExState <= waitToExecute;
 			
 			when others =>
 				null;
