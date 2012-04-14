@@ -11,6 +11,7 @@ use ieee.std_logic_arith.all;
 use work.pkgOpenCPU32.all;
  
 ENTITY testDataPath IS
+generic (n : integer := nBits - 1);										--! Generic value (Used to easily change the size of the Alu on the package)
 END testDataPath;
  
 --! @brief Datapath Testbench file
@@ -40,8 +41,8 @@ ARCHITECTURE behavior OF testDataPath IS
     
 
    --Inputs
-   signal inputMm : std_logic_vector(31 downto 0) := (others => 'U');	--! Wire to connect Test signal to component
-   signal inputImm : std_logic_vector(31 downto 0) := (others => 'U');	--! Wire to connect Test signal to component
+   signal inputMm : std_logic_vector(n downto 0) := (others => 'U');		--! Wire to connect Test signal to component
+   signal inputImm : std_logic_vector(n downto 0) := (others => 'U');	--! Wire to connect Test signal to component
    signal clk : std_logic := '0';													--! Wire to connect Test signal to component
    signal outEn : typeEnDis := disable;											--! Wire to connect Test signal to component
    signal aluOp : aluOps := alu_pass;												--! Wire to connect Test signal to component
@@ -55,7 +56,7 @@ ARCHITECTURE behavior OF testDataPath IS
    signal regFileEnB : std_logic := '0';											--! Wire to connect Test signal to component
 
  	--Outputs
-   signal outputDp : std_logic_vector(31 downto 0);							--! Wire to connect Test signal to component
+   signal outputDp : std_logic_vector(n downto 0);								--! Wire to connect Test signal to component
    signal dpFlags : std_logic_vector(2 downto 0);								--! Wire to connect Test signal to component
    
 	-- Clock period definitions
