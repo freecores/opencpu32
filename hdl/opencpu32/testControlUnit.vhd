@@ -128,8 +128,27 @@ BEGIN
 		wait for CLK_period;	-- Fetch
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
+		
+		-- Verify if signals for the datapath are valid
+		assert ImmDp = conv_std_logic_vector(10, nBits) report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteAddr = r0 report "Invalid value" severity FAILURE; 
+      assert DpAluOp = alu_pass report "Invalid value" severity FAILURE;
+		assert MuxDp = muxPos(fromImediate) report "Invalid value" severity FAILURE;				
+		
 		wait for CLK_period;	-- Executing ... 1
-		wait for CLK_period;	-- Executing ... 2
+		
+		-- State writing on the registers
+		assert DpRegFileWriteEn = '1' report "Invalid value" severity FAILURE;				
+		
+		wait for CLK_period;	-- Executing ...2 (Releasing lines.... (Next instruction should come...)				
+		
+		-- Verify if all lines are unasserted
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnB = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnA = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert outEnDp = disable report "Invalid value" severity FAILURE;								
+		-------------------------------------------------------------------------------------------------
 		
 		-- MOV r1,20d (Compare control unit outputs with Datapath)--------------------------------------
 		REPORT "MOV r1,20" SEVERITY NOTE;
@@ -137,10 +156,89 @@ BEGIN
 		wait for CLK_period;	-- Fetch
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
+		
+		-- Verify if signals for the datapath are valid
+		assert ImmDp = conv_std_logic_vector(20, nBits) report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteAddr = r1 report "Invalid value" severity FAILURE; 
+      assert DpAluOp = alu_pass report "Invalid value" severity FAILURE;
+		assert MuxDp = muxPos(fromImediate) report "Invalid value" severity FAILURE;				
+		
 		wait for CLK_period;	-- Executing ... 1
-		wait for CLK_period;	-- Executing ... 2
+		
+		-- State writing on the registers
+		assert DpRegFileWriteEn = '1' report "Invalid value" severity FAILURE;				
+		
+		wait for CLK_period;	-- Executing ...2 (Releasing lines.... (Next instruction should come...)				
+		
+		-- Verify if all lines are unasserted
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnB = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnA = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert outEnDp = disable report "Invalid value" severity FAILURE;
+		-------------------------------------------------------------------------------------------------
+		
+		-- MOV r2,r1 (Compare control unit outputs with Datapath)--------------------------------------
+		REPORT "MOV r2,r1" SEVERITY NOTE;
+		MemoryDataInput <= mov_reg & conv_std_logic_vector(reg2Num(r2),4) & conv_std_logic_vector(reg2Num(r1),4) & "000000000000000000";
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		
+		-- Verify if signals for the datapath are valid		
+		assert DpRegFileReadAddrB = r1 report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE;       
+		assert MuxDp = muxPos(fromRegFileB) report "Invalid value" severity FAILURE;				
+		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
+		wait for CLK_period;	-- Executing ... 1
+		
+		-- State writing on the registers
+		assert DpRegFileWriteEn = '1' report "Invalid value" severity FAILURE;				
+		
+		wait for CLK_period;	-- Executing ...2 (Releasing lines.... (Next instruction should come...)				
+		
+		-- Verify if all lines are unasserted
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnB = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnA = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert outEnDp = disable report "Invalid value" severity FAILURE;
+		-------------------------------------------------------------------------------------------------
+		
+		-- ADD r2,r0 (Compare control unit outputs with Datapath)--------------------------------------
+		REPORT "ADD r2,r0" SEVERITY NOTE;
+		MemoryDataInput <= add_reg & conv_std_logic_vector(reg2Num(r2),4) & conv_std_logic_vector(reg2Num(r0),4) & "000000000000000000";
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		
+		-- Verify if signals for the datapath are valid		
+		assert DpRegFileReadAddrB = r0 report "Invalid value" severity FAILURE;
+		assert DpRegFileReadAddrA = r2 report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE;       
+		assert MuxDp = muxPos(fromAlu) report "Invalid value" severity FAILURE;		
+		assert DpAluOp = alu_sum report "Invalid value" severity FAILURE;		
+		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnA = '1' report "Invalid value" severity FAILURE;
+		assert MuxRegDp = muxRegPos(fromRegFileA) report "Invalid value" severity FAILURE;
+		wait for CLK_period;	-- Executing ... 1
+		
+		-- State writing on the registers
+		assert DpRegFileWriteEn = '1' report "Invalid value" severity FAILURE;				
+		
+		wait for CLK_period;	-- Executing ...2 (Releasing lines.... (Next instruction should come...)				
+		
+		-- Verify if all lines are unasserted
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnB = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileReadEnA = '0' report "Invalid value" severity FAILURE;
+		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
+		assert outEnDp = disable report "Invalid value" severity FAILURE;
+		-------------------------------------------------------------------------------------------------
 
-      wait;
+      -- Finish simulation
+		assert false report "NONE. End of simulation." severity failure;
+		wait;
    end process;
 
 END;

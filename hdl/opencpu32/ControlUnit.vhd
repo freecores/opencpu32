@@ -116,12 +116,12 @@ begin
 				case opcodeIR is
 					when mov_reg | mov_val | add_reg | sub_reg | and_reg | or_reg | xor_reg | ld_reg | ld_val | stom_reg | stom_val =>
 							nextCpuState <= execute;
-							cyclesExecute := 3;	-- Wait 3 cycles for mov operation
+							cyclesExecute := 1;	-- Wait 1 cycles
 							currInstruction <= IR;
 					
 					when jmp_val | jmpr_val =>
 						nextCpuState <= execute;
-						cyclesExecute := 1;
+						cyclesExecute := 0;		-- No Wait cycle
 					
 					-- Invalid instruction (Now will be ignored, but latter should raise a trap
 					when others =>						
@@ -275,7 +275,7 @@ begin
 				DpRegFileWriteEn <= '0';
 				outEnDp <= disable;
 				-- Come back to waiting state
-				nextExState <= waitToExecute;
+				nextExState <= waitToExecute;				
 			
 			when others =>
 				null;
