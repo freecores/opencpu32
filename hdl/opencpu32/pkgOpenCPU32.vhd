@@ -4,6 +4,11 @@
 --! @mainpage
 --! <H1>Main document of the OpenCPU32 project</H1>\n
 --! <H2>Features</H2>
+--! 32 Bits \n
+--! RISC \n\n
+--! Interesting links \n
+--! http://www.ohwr.org/projects \n
+--! http://opencores.org/ \n
 
 --! Use standard library
 library ieee;
