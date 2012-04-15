@@ -196,6 +196,7 @@
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_STX" xil_pn:name="openCpu.stx"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_REPORT" xil_pn:name="openCpu.syr"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST" xil_pn:name="openCpu.xst"/>
+    <file xil_pn:fileType="FILE_HTML" xil_pn:name="openCpu_envsettings.html"/>
     <file xil_pn:fileType="FILE_HTML" xil_pn:name="openCpu_summary.html"/>
     <file xil_pn:branch="Implementation" xil_pn:fileType="FILE_XST_PROJECT" xil_pn:name="openCpu_vhdl.prj"/>
     <file xil_pn:fileType="FILE_XRPT" xil_pn:name="openCpu_xst.xrpt"/>
@@ -222,9 +223,13 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1334437962" xil_pn:in_ck="5551394544742288633" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1334437962">
+    <transform xil_pn:end_ts="1334439044" xil_pn:in_ck="5551394544742288633" xil_pn:name="TRAN_copyAbstractToPostAbstractSimulation" xil_pn:start_ts="1334439044">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="Alu.vhd"/>
       <outfile xil_pn:name="ControlUnit.vhd"/>
       <outfile xil_pn:name="DataPath.vhd"/>
@@ -253,9 +258,14 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1334437962" xil_pn:in_ck="5551394544742288633" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1334437962">
+    <transform xil_pn:end_ts="1334439044" xil_pn:in_ck="5551394544742288633" xil_pn:name="TRAN_copyPostAbstractToPreSimulation" xil_pn:start_ts="1334439044">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="Alu.vhd"/>
       <outfile xil_pn:name="ControlUnit.vhd"/>
       <outfile xil_pn:name="DataPath.vhd"/>
@@ -272,9 +282,14 @@
       <outfile xil_pn:name="testRegisterFile.vhd"/>
       <outfile xil_pn:name="testTriStateBuffer.vhd"/>
     </transform>
-    <transform xil_pn:end_ts="1334437965" xil_pn:in_ck="5551394544742288633" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2461943258679370096" xil_pn:start_ts="1334437962">
+    <transform xil_pn:end_ts="1334439047" xil_pn:in_ck="5551394544742288633" xil_pn:name="TRAN_ISimulateBehavioralModelRunFuse" xil_pn:prop_ck="-2461943258679370096" xil_pn:start_ts="1334439044">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForInputs"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="InputChanged"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="fuse.log"/>
       <outfile xil_pn:name="isim"/>
       <outfile xil_pn:name="isim.log"/>
@@ -282,9 +297,12 @@
       <outfile xil_pn:name="testControlUnit_isim_beh.exe"/>
       <outfile xil_pn:name="xilinxsim.ini"/>
     </transform>
-    <transform xil_pn:end_ts="1334437965" xil_pn:in_ck="4949781681609100681" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="5692602031942061840" xil_pn:start_ts="1334437965">
+    <transform xil_pn:end_ts="1334439047" xil_pn:in_ck="4949781681609100681" xil_pn:name="TRAN_ISimulateBehavioralModel" xil_pn:prop_ck="5692602031942061840" xil_pn:start_ts="1334439047">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
+      <status xil_pn:value="OutOfDateForPredecessor"/>
+      <status xil_pn:value="OutOfDateForOutputs"/>
+      <status xil_pn:value="OutputChanged"/>
       <outfile xil_pn:name="isim.cmd"/>
       <outfile xil_pn:name="isim.log"/>
       <outfile xil_pn:name="testControlUnit_isim_beh.wdb"/>
@@ -317,12 +335,10 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1333983326" xil_pn:in_ck="-3059529097558291903" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-1259764691931299582" xil_pn:start_ts="1333983316">
+    <transform xil_pn:end_ts="1334481587" xil_pn:in_ck="-3059529097558291903" xil_pn:name="TRANEXT_xstsynthesize_spartan3e" xil_pn:prop_ck="-1259764691931299582" xil_pn:start_ts="1334481574">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="InputChanged"/>
       <outfile xil_pn:name=".lso"/>
       <outfile xil_pn:name="Alu.ngr"/>
       <outfile xil_pn:name="ControlUnit.ngr"/>

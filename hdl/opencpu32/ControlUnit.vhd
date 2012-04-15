@@ -114,7 +114,7 @@ begin
 				
 				-- The high attribute points to the highes bit position
 				case opcodeIR is
-					when mov_reg | mov_val | add_reg | sub_reg | and_reg | or_reg | xor_reg | ld_reg | ld_val | stom_reg | stom_val =>
+					when mov_reg | mov_val | add_reg | add_val | sub_reg | and_reg | or_reg | xor_reg | ld_reg | ld_val | stom_reg | stom_val =>
 							nextCpuState <= execute;
 							cyclesExecute := 1;	-- Wait 1 cycles
 							currInstruction <= IR;
