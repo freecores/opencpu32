@@ -9,6 +9,12 @@ use ieee.std_logic_arith.all;
  
 --! Use CPU Definitions package
 use work.pkgOpenCPU32.all;
+
+--! Adding library for File I/O 
+-- More information on this site:
+-- http://eesun.free.fr/DOC/vhdlref/refguide/language_overview/test_benches/reading_and_writing_files_with_text_i_o.htm
+use std.textio.ALL;
+use ieee.std_logic_textio.all;
  
 ENTITY testControlUnit IS
 generic (n : integer := nBits - 1);									--! Generic value (Used to easily change the size of the Alu on the package)
@@ -114,9 +120,13 @@ BEGIN
 
    -- Stimulus process
    stim_proc: process
+	variable line_out: Line; -- Line that will be written to a file
+	file cmdfile: TEXT;      -- Define the file 'handle'
    begin		      
 		-- Reset operation
 		REPORT "RESET" SEVERITY NOTE;
+		-- Open source file for write...
+		FILE_OPEN(cmdfile,"testCode/testCodeBin.dat",WRITE_MODE);
 		reset <= '1';
       wait for 2 ns;	     
 		reset <= '0';
@@ -124,10 +134,14 @@ BEGIN
 
       -- MOV r0,10d (Compare control unit outputs with Datapath)--------------------------------------
 		REPORT "MOV r0,10" SEVERITY NOTE;
-		MemoryDataInput <= mov_val & conv_std_logic_vector(reg2Num(r0),4) & conv_std_logic_vector(10, 22);
+		MemoryDataInput <= mov_val & conv_std_logic_vector(reg2Num(r0),4) & conv_std_logic_vector(10, 22);		
 		wait for CLK_period;	-- Fetch
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
+		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
 		
 		-- Verify if signals for the datapath are valid
 		assert ImmDp = conv_std_logic_vector(10, nBits) report "Invalid value" severity FAILURE;
@@ -157,6 +171,10 @@ BEGIN
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
 		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
 		-- Verify if signals for the datapath are valid
 		assert ImmDp = conv_std_logic_vector(20, nBits) report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r1 report "Invalid value" severity FAILURE; 
@@ -185,6 +203,10 @@ BEGIN
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
 		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
 		-- Verify if signals for the datapath are valid		
 		assert DpRegFileReadAddrB = r1 report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE;       
@@ -211,6 +233,10 @@ BEGIN
 		wait for CLK_period;	-- Fetch
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
+		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
 		
 		-- Verify if signals for the datapath are valid		
 		assert DpRegFileReadAddrB = r0 report "Invalid value" severity FAILURE;
@@ -243,6 +269,10 @@ BEGIN
 		wait for CLK_period;	-- Decode
 		wait for CLK_period;	-- Execute
 		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
 		-- Verify if signals for the datapath are valid		
 		assert ImmDp = conv_std_logic_vector(2, nBits) report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE; 
@@ -267,7 +297,9 @@ BEGIN
 		assert outEnDp = disable report "Invalid value" severity FAILURE;
 		-------------------------------------------------------------------------------------------------
 
-      -- Finish simulation
+      -- Close file
+		file_close(cmdfile);
+		-- Finish simulation
 		assert false report "NONE. End of simulation." severity failure;
 		wait;
    end process;

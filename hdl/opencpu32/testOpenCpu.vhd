@@ -81,13 +81,13 @@ BEGIN
    -- Stimulus process
    stim_proc: process
 	file cmdfile: TEXT;       			-- Define the file 'handle'
-	variable line_in,line_out: Line; -- Line buffer
+	variable line_in: Line; -- Line buffer
 	variable good: boolean;				-- Flag to detect a good line read
 	variable instructionCode : std_logic_vector(n downto 0);
    begin		
       -- Reset operation
 		REPORT "RESET" SEVERITY NOTE;
-		-- Open source file
+		-- Open source file for reading...
 		FILE_OPEN(cmdfile,"testCode/testCodeBin.dat",READ_MODE);
 		
 		-- Check end of file
