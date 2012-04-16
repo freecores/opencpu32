@@ -12,6 +12,7 @@ use work.pkgOpenCPU32.all;
 
 --! Adding library for File I/O 
 -- More information on this site:
+-- http://people.sabanciuniv.edu/erkays/el310/io_10.pdf
 -- http://eesun.free.fr/DOC/vhdlref/refguide/language_overview/test_benches/reading_and_writing_files_with_text_i_o.htm
 use std.textio.ALL;
 use ieee.std_logic_textio.all;
