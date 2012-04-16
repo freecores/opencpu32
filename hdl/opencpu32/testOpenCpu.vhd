@@ -80,17 +80,73 @@ BEGIN
 
    -- Stimulus process
    stim_proc: process
+	file cmdfile: TEXT;       			-- Define the file 'handle'
+	variable line_in,line_out: Line; -- Line buffer
+	variable good: boolean;				-- Flag to detect a good line read
+	variable instructionCode : std_logic_vector(n downto 0);
    begin		
       -- Reset operation
 		REPORT "RESET" SEVERITY NOTE;
+		-- Open source file
+		FILE_OPEN(cmdfile,"testCode/testCodeBin.dat",READ_MODE);
+		
+		-- Check end of file
+		if endfile(cmdfile) then
+			assert false report "End of file found..." severity failure;
+		end if;
+		
 		rst <= '1';
       wait for 2 ns;	     
 		rst <= '0';
 		wait for 2 ns;	     	
 
-      wait for clk_period*10;
+      wait until mem_rd = '1';
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
+		
+		wait for CLK_period;
+		
+		wait until mem_rd = '1';
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
 
-      -- insert stimulus here 
+      wait for CLK_period;
+		
+		wait until mem_rd = '1';
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
+		
+		wait for CLK_period;
+		
+		wait until mem_rd = '1';
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
+		
+		wait for CLK_period;
+		
+		wait until mem_rd = '1';
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
+		
+		wait for CLK_period;
+		
+		wait until mem_rd = '1';
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
+		
+		wait for CLK_period;
 
       -- Finish simulation
 		assert false report "NONE. End of simulation." severity failure;
