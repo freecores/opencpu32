@@ -89,8 +89,8 @@ signal dataPathFlags : STD_LOGIC_VECTOR (2 downto 0);
 begin
 	--! Instantiate the Datapath
    uDataPath: DataPath PORT MAP (
-			inputMm => InputImediate,
-			inputImm => mem_data_in,
+			inputMm => mem_data_in,
+			inputImm => InputImediate,
 			clk => clk,
 			outEn => enableOutputDp,
 			aluOp => aluOperations,
