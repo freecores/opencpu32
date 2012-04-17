@@ -26,7 +26,7 @@ ARCHITECTURE behavior OF testMultiplexer4_1 IS
 			  C   : in  STD_LOGIC_VECTOR (n downto 0);	--! Third Input
 			  D   : in  STD_LOGIC_VECTOR (n downto 0);	--! Forth Input
 			  E   : in  STD_LOGIC_VECTOR (n downto 0);	--! Fifth Input
-           sel : in  STD_LOGIC_VECTOR (2 downto 0);	--! Select inputs (1, 2, 3, 4, 5)
+           sel : in  dpMuxInputs;							--! Select inputs (1, 2, 3, 4, 5)
            S   : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
     END COMPONENT;
     
@@ -37,7 +37,7 @@ ARCHITECTURE behavior OF testMultiplexer4_1 IS
 	signal C : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
 	signal D : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
 	signal E : std_logic_vector((nBits - 1) downto 0) := (others => '0');	--! Wire to connect Test signal to component
-   signal sel : STD_LOGIC_VECTOR (2 downto 0) := "000";							--! Wire to connect Test signal to component
+   signal sel : dpMuxInputs := fromMemory;											--! Wire to connect Test signal to component
 
  	--Outputs
    signal S : std_logic_vector((nBits - 1) downto 0);   							--! Wire to connect Test signal to component
@@ -61,7 +61,7 @@ BEGIN
       -- Sel 0 ---------------------------------------------------------------------------
 		wait for 1 ps;
 		REPORT "Select first channel" SEVERITY NOTE;
-		sel <= "000";
+		sel <= fromMemory;
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
@@ -73,7 +73,7 @@ BEGIN
 		-- Sel 1 ---------------------------------------------------------------------------
 		wait for 1 ns;
 		REPORT "Select second channel" SEVERITY NOTE;
-		sel <= "001";
+		sel <= fromImediate;
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
@@ -85,7 +85,7 @@ BEGIN
 		-- Sel 2 ---------------------------------------------------------------------------
 		wait for 1 ns;
 		REPORT "Select third channel" SEVERITY NOTE;
-		sel <= "010";
+		sel <= fromRegFileA;
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
@@ -97,7 +97,7 @@ BEGIN
 		-- Sel 3 ---------------------------------------------------------------------------
 		wait for 1 ns;
 		REPORT "Select forth channel" SEVERITY NOTE;
-		sel <= "011";
+		sel <= fromRegFileB;
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		
@@ -109,7 +109,7 @@ BEGIN
 		-- Sel 4 ---------------------------------------------------------------------------
 		wait for 1 ns;
 		REPORT "Select fifth channel" SEVERITY NOTE;
-		sel <= "100";
+		sel <= fromAlu;
 		A <= conv_std_logic_vector(0, nBits);
 		B <= conv_std_logic_vector(1000, nBits);		
 		C <= conv_std_logic_vector(2000, nBits);		

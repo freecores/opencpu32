@@ -19,7 +19,7 @@ entity Multiplexer4_1 is
 			  C   : in  STD_LOGIC_VECTOR (n downto 0);	--! Third Input
 			  D   : in  STD_LOGIC_VECTOR (n downto 0);	--! Forth Input
 			  E   : in  STD_LOGIC_VECTOR (n downto 0);	--! Fifth Input
-           sel : in  STD_LOGIC_VECTOR (2 downto 0);	--! Select inputs (1, 2, 3, 4, 5)
+           sel : in  dpMuxInputs;							--! Select inputs (1, 2, 3, 4, 5)
            S   : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
 end Multiplexer4_1;
 
@@ -29,11 +29,11 @@ architecture Behavioral of Multiplexer4_1 is
 
 begin
 	with sel select
-		S <= A when "000",
-			  B when "001",
-			  C when "010",
-			  D when "011",
-			  E when "100",
+		S <= A when fromMemory,
+			  B when fromImediate,
+			  C when fromRegFileA,
+			  D when fromRegFileB,
+			  E when fromAlu,
 			  (others => 'Z') when others;
 
 end Behavioral;

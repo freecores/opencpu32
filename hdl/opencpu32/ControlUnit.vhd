@@ -23,7 +23,7 @@ entity ControlUnit is
            FlagsDp : in  STD_LOGIC_VECTOR (2 downto 0);				--! Flags comming from the Datapath
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
 			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
-           MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);				--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
+           MuxDp : out  dpMuxInputs;										--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
 			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
            DpAluOp : out  aluOps;											--! Alu operations
@@ -196,7 +196,7 @@ begin
 					case opcodeIR is					
 					-- MOV r2,r1 (See the testDatapath to see how to drive the datapath for this function)
 					when mov_reg =>						
-						MuxDp <= muxPos(fromRegFileB);						
+						MuxDp <= fromRegFileB;						
 						DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg2)));
 						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));						
 						DpRegFileReadEnB <= '1';
@@ -204,14 +204,14 @@ begin
 					
 					-- LOAD r1,10 (Load into r1, the value in the main memory located at address 10)
 					when ld_val =>
-						MuxDp <= muxPos(fromMemory);	
+						MuxDp <= fromMemory;	
 						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));
 						-- The part that interface with the memory is located on the first process
 						nextExState <= writeRegister;
 					
 					-- STORE r1,10 (Store the value on r1 in the main memory located at address 10)
 					when stom_val =>
-					MuxDp <= muxPos(fromRegFileB);
+					MuxDp <= fromRegFileB;
 					DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));					
 					DpRegFileReadEnB <= '1';
 					nextExState <= readRegisterB;
@@ -220,7 +220,7 @@ begin
 					
 					-- ADD r2,r0 (See the testDatapath to see how to drive the datapath for this function)
 					when add_reg | sub_reg | and_reg | or_reg | xor_reg =>
-						MuxDp <= muxPos(fromAlu);
+						MuxDp <= fromAlu;
 						MuxRegDp <= muxRegPos(fromRegFileA);
 						DpRegFileReadAddrA <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));	-- Read first operand
 						DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg2))); -- Read second operand
@@ -232,14 +232,14 @@ begin
 						
 					-- MOV r0,10d (See the testDatapath to see how to drive the datapath for this function)
 					when mov_val =>						
-						MuxDp <= muxPos(fromImediate);						
+						MuxDp <= fromImediate;						
 						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));						
 						ImmDp <= "0000000000" & operand_imm;	-- & is used to concatenate signals
 						nextExState <= writeRegister;	
 
 					-- ADD r3,2 (r2 <= r2+2) (See the testDatapath to see how to drive the datapath for this function)
 					when add_val | sub_val | and_val | or_val | xor_val =>
-						MuxDp <= muxPos(fromAlu);
+						MuxDp <= fromAlu;
 						MuxRegDp <= muxRegPos(fromImediate);
 						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));	
 						DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));	-- Read first operand

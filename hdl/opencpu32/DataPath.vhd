@@ -22,7 +22,7 @@ entity DataPath is
 			  clk : in  STD_LOGIC;												--! Clock signal
            outEn : in  typeEnDis;											--! Enable/Disable datapath output
            aluOp : in  aluOps;												--! Alu operations
-           muxSel : in  STD_LOGIC_VECTOR (2 downto 0);				--! Select inputs from dataPath(Memory,Imediate,RegisterFile,Alu)
+           muxSel : in  dpMuxInputs;										--! Select inputs from dataPath(Memory,Imediate,RegisterFile,Alu)
 			  muxRegFile : in STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
            regFileWriteAddr : in  generalRegisters;					--! General register write address
            regFileWriteEn : in  STD_LOGIC;								--! RegisterFile write enable signal
@@ -46,7 +46,7 @@ COMPONENT Multiplexer4_1
 		  C   : in  STD_LOGIC_VECTOR (n downto 0);	--! Third Input
 		  D   : in  STD_LOGIC_VECTOR (n downto 0);	--! Forth Input
 		  E   : in  STD_LOGIC_VECTOR (n downto 0);	--! Fifth Input
-        sel : in  STD_LOGIC_VECTOR (2 downto 0);	--! Select inputs (1, 2, 3, 4, 5)
+        sel : in  dpMuxInputs;							--! Select inputs (1, 2, 3, 4, 5)
 		  S   : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
 END COMPONENT;
 

@@ -35,7 +35,7 @@ ARCHITECTURE behavior OF testControlUnit IS
            FlagsDp : in  STD_LOGIC_VECTOR (2 downto 0);				--! Flags comming from the Datapath
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
 			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
-           MuxDp : out  STD_LOGIC_VECTOR (2 downto 0);				--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
+           MuxDp : out  dpMuxInputs;										--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
 			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
            DpAluOp : out  aluOps;											--! Alu operations
@@ -63,7 +63,7 @@ ARCHITECTURE behavior OF testControlUnit IS
 
  	--Outputs
    signal outEnDp : typeEnDis;																--! Wire to connect Test signal to component
-	signal MuxDp : std_logic_vector(2 downto 0);											--! Wire to connect Test signal to component
+	signal MuxDp : dpMuxInputs;																--! Wire to connect Test signal to component
 	signal MuxRegDp : std_logic_vector(1 downto 0);										--! Wire to connect Test signal to component
    signal ImmDp : std_logic_vector(n downto 0);											--! Wire to connect Test signal to component
 	signal DpAluOp : aluOps;																	--! Wire to connect Test signal to component
@@ -148,7 +148,7 @@ BEGIN
 		assert ImmDp = conv_std_logic_vector(10, nBits) report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r0 report "Invalid value" severity FAILURE; 
       assert DpAluOp = alu_pass report "Invalid value" severity FAILURE;
-		assert MuxDp = muxPos(fromImediate) report "Invalid value" severity FAILURE;				
+		assert MuxDp = fromImediate report "Invalid value" severity FAILURE;				
 		
 		wait for CLK_period;	-- Executing ... 1
 		
@@ -180,7 +180,7 @@ BEGIN
 		assert ImmDp = conv_std_logic_vector(20, nBits) report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r1 report "Invalid value" severity FAILURE; 
       assert DpAluOp = alu_pass report "Invalid value" severity FAILURE;
-		assert MuxDp = muxPos(fromImediate) report "Invalid value" severity FAILURE;				
+		assert MuxDp = fromImediate report "Invalid value" severity FAILURE;				
 		
 		wait for CLK_period;	-- Executing ... 1
 		
@@ -211,7 +211,7 @@ BEGIN
 		-- Verify if signals for the datapath are valid		
 		assert DpRegFileReadAddrB = r1 report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE;       
-		assert MuxDp = muxPos(fromRegFileB) report "Invalid value" severity FAILURE;				
+		assert MuxDp = fromRegFileB report "Invalid value" severity FAILURE;				
 		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
 		wait for CLK_period;	-- Executing ... 1
 		
@@ -243,7 +243,7 @@ BEGIN
 		assert DpRegFileReadAddrB = r0 report "Invalid value" severity FAILURE;
 		assert DpRegFileReadAddrA = r2 report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE;       
-		assert MuxDp = muxPos(fromAlu) report "Invalid value" severity FAILURE;		
+		assert MuxDp = fromAlu report "Invalid value" severity FAILURE;		
 		assert DpAluOp = alu_sum report "Invalid value" severity FAILURE;		
 		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
 		assert DpRegFileReadEnA = '1' report "Invalid value" severity FAILURE;
@@ -278,7 +278,7 @@ BEGIN
 		assert ImmDp = conv_std_logic_vector(2, nBits) report "Invalid value" severity FAILURE;
 		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE; 
       assert DpAluOp = alu_sum report "Invalid value" severity FAILURE;
-		assert MuxDp = muxPos(fromAlu) report "Invalid value" severity FAILURE;				
+		assert MuxDp = fromAlu report "Invalid value" severity FAILURE;				
 		assert MuxRegDp = muxRegPos(fromImediate) report "Invalid value" severity FAILURE;
 		assert DpRegFileReadAddrB = r2 report "Invalid value" severity FAILURE;
 		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
