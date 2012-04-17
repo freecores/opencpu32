@@ -97,58 +97,20 @@ BEGIN
 		end if;
 		
 		rst <= '1';
-      wait for 2 ns;	     
+      wait for 15 ns;	     
 		rst <= '0';
-		wait for 2 ns;	     	
-		
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;
+		wait for 15 ns;
 
-      wait until mem_rd = '0';						
-				
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;
+		while not endfile( cmdfile ) loop
+			readline(cmdfile,line_in);     			 -- Read a line from the file
+			read(line_in,instructionCode,good);     -- Read the CI input
+			assert good report "Could not parse the line" severity ERROR;
+			mem_data_in <= instructionCode;
 
-      wait until mem_rd = '0';						
-				
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;				
+			wait until mem_rd = '0';						
+		end loop;										
 		
 		wait until mem_rd = '0';
-		
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;
-		
-		wait until mem_rd = '0';
-		
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;
-		
-		wait until mem_rd = '0';
-		
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;
-		
-		wait until mem_rd = '0';
-		
-		readline(cmdfile,line_in);     			 -- Read a line from the file
-		read(line_in,instructionCode,good);     -- Read the CI input
-		assert good report "Could not parse the line" severity ERROR;
-		mem_data_in <= instructionCode;
-		
-		wait for CLK_period;
 
       -- Finish simulation
 		assert false report "NONE. End of simulation." severity failure;
