@@ -141,6 +141,13 @@ BEGIN
 		assert good report "Could not parse the line" severity ERROR;
 		mem_data_in <= instructionCode;
 		
+		wait until mem_rd = '0';
+		
+		readline(cmdfile,line_in);     			 -- Read a line from the file
+		read(line_in,instructionCode,good);     -- Read the CI input
+		assert good report "Could not parse the line" severity ERROR;
+		mem_data_in <= instructionCode;
+		
 		wait for CLK_period;
 
       -- Finish simulation

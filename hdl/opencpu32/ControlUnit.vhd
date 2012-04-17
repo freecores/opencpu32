@@ -79,10 +79,11 @@ begin
 	
 	-- States Fetch, decode, execute from the processor (Also handles the execution of jump instructions)
 	process (currentCpuState)
-	variable cyclesExecute : integer range 0 to 20; -- Cycles to wait while executing instruction
+	variable cyclesExecute : integer range 0 to 20; 		-- Cycles to wait while executing instruction
 	variable opcodeIR : std_logic_vector(5 downto 0);
 	variable operand_reg1 : std_logic_vector(3 downto 0);
 	variable operand_imm  : std_logic_vector(21 downto 0);
+	variable accDp : std_logic_vector(n downto 0);			-- Value stored from DataPath
 	begin
 		opcodeIR := IR((IR'HIGH) downto (IR'HIGH - 5));
 		operand_reg1 := IR((IR'HIGH - 6) downto (IR'HIGH - 9));		-- 4 bits register operand1 (Max 16 registers)
@@ -105,6 +106,7 @@ begin
 				MemoryDataRdAddr <= PC;	-- Warning PC is not 1 yet...
 				IR <= MemoryDataInput;
 				MemoryDataReadEn <= '1';
+				MemoryDataWriteEn <= '0';
 				nextCpuState <= decode;
 			
 			-- Detect with instruction came from memory, set the number of cycles to execute...
@@ -114,9 +116,14 @@ begin
 				
 				-- The high attribute points to the highes bit position
 				case opcodeIR is
-					when mov_reg | mov_val | add_reg | add_val | sub_reg | and_reg | or_reg | xor_reg | ld_reg | ld_val | stom_reg | stom_val =>
+					when mov_reg | mov_val | add_reg | add_val | sub_reg | and_reg | or_reg | xor_reg =>
 							nextCpuState <= execute;
 							cyclesExecute := 1;	-- Wait 1 cycles
+							currInstruction <= IR;
+					
+					when ld_reg | ld_val | stom_reg | stom_val =>
+							nextCpuState <= execute;
+							cyclesExecute := 2;	-- Wait 2 cycles
 							currInstruction <= IR;
 					
 					when jmp_val | jmpr_val =>
@@ -143,11 +150,18 @@ begin
 						MemoryDataRdAddr <= "0000000000" & operand_imm;
 						MemoryDataReadEn <= '1';
 					
-					-- STORE r1,10 (Store the value on r1 in the main memory located at address 10)
+					-- STORE r1,10 (Store the value 10 on memory address pointed by r1)
 					when stom_val =>
-						MemoryDataWrAddr <= "0000000000" & operand_imm;
-						MemoryDataWriteEn <= '1';
-						MemoryDataOut <= DataDp;
+						-- And put the imediate value ...							
+							MemoryDataOut <= "0000000000" & operand_imm;								
+							if cyclesExecute = 1 then
+								-- After the register data is avaible in DataDp we put it's address and								
+								accDp := DataDp;
+								MemoryDataWrAddr <= accDp;								
+							elsif cyclesExecute = 0 then
+								-- strobe in to enter the data
+								MemoryDataWriteEn <= '1';
+							end if;
 						
 					when others =>						
 						null;
@@ -157,13 +171,13 @@ begin
 					-- Finish the instruction execution get next
 					nextCpuState <= fetch;
 				else
-					nextCpuState <= executing;
+					nextCpuState <= executing;					
 				end if;				
 			
 			-- Just wait a cycle and back again to execute state which verify if still need to wait some cycles
 			when executing =>
 				cyclesExecute := cyclesExecute - 1;				
-				nextCpuState <= execute;
+				nextCpuState <= execute;											
 			
 			when others =>
 				null;
@@ -191,7 +205,7 @@ begin
 			
 			when waitToExecute =>
 				if ( (currentCpuState /= execute) and (currentCpuState /= executing) ) then
-					nextExState <= initInstructionExecution;
+					nextExState <= initInstructionExecution;					
 				else
 					case opcodeIR is					
 					-- MOV r2,r1 (See the testDatapath to see how to drive the datapath for this function)
@@ -209,14 +223,13 @@ begin
 						-- The part that interface with the memory is located on the first process
 						nextExState <= writeRegister;
 					
-					-- STORE r1,10 (Store the value on r1 in the main memory located at address 10)
+					-- STORE r1,10 (Store the value 10 on the main memory pointed by r1)
 					when stom_val =>
 					MuxDp <= fromRegFileB;
 					DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));					
 					DpRegFileReadEnB <= '1';
-					nextExState <= readRegisterB;
 					-- The part that interface with the memory is located on the first process
-					nextExState <= readRegisterB;
+					nextExState <= readRegisterB;										
 					
 					-- ADD r2,r0 (See the testDatapath to see how to drive the datapath for this function)
 					when add_reg | sub_reg | and_reg | or_reg | xor_reg =>

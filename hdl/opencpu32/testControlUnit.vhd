@@ -297,6 +297,36 @@ BEGIN
 		assert DpRegFileWriteEn = '0' report "Invalid value" severity FAILURE;
 		assert outEnDp = disable report "Invalid value" severity FAILURE;
 		-------------------------------------------------------------------------------------------------
+		
+		-- sto r2,10 (Store into memory address pointed by r2 the value 50)------------------------------
+		REPORT "STO r2,50" SEVERITY NOTE;
+		MemoryDataInput <= stom_val & conv_std_logic_vector(reg2Num(r2),4) & conv_std_logic_vector(50, 22);
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
+		-- Verify if signals for the datapath are valid		
+		assert MemoryDataOut = conv_std_logic_vector(50, 22) report "Invalid value" severity FAILURE;
+		
+		wait for CLK_period;	-- Executing ... 1
+						
+		wait for CLK_period;	-- Executing ... 2		
+								
+		wait for CLK_period;	-- Executing ... 3
+						
+		wait for CLK_period;	-- Executing ... 4
+		
+		-- Verify memory strobe signal
+		assert MemoryDataWriteEn = '1' report "Invalid value" severity FAILURE;
+		
+		wait for CLK_period;	-- Executing ... 3
+		
+		assert MemoryDataWriteEn = '0' report "Invalid value" severity FAILURE;
+		-------------------------------------------------------------------------------------------------
 
       -- Close file
 		file_close(cmdfile);
