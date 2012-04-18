@@ -36,7 +36,7 @@ ARCHITECTURE behavior OF testControlUnit IS
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
 			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
            MuxDp : out  dpMuxInputs;										--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
-			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
+			  MuxRegDp : out dpMuxAluIn;										--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
            DpAluOp : out  aluOps;											--! Alu operations
 			  DpRegFileWriteAddr : out  generalRegisters;				--! General register address to write
@@ -64,7 +64,7 @@ ARCHITECTURE behavior OF testControlUnit IS
  	--Outputs
    signal outEnDp : typeEnDis;																--! Wire to connect Test signal to component
 	signal MuxDp : dpMuxInputs;																--! Wire to connect Test signal to component
-	signal MuxRegDp : std_logic_vector(1 downto 0);										--! Wire to connect Test signal to component
+	signal MuxRegDp : dpMuxAluIn;																--! Wire to connect Test signal to component
    signal ImmDp : std_logic_vector(n downto 0);											--! Wire to connect Test signal to component
 	signal DpAluOp : aluOps;																	--! Wire to connect Test signal to component
    signal DpRegFileWriteAddr : generalRegisters;										--! Wire to connect Test signal to component
@@ -247,7 +247,7 @@ BEGIN
 		assert DpAluOp = alu_sum report "Invalid value" severity FAILURE;		
 		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
 		assert DpRegFileReadEnA = '1' report "Invalid value" severity FAILURE;
-		assert MuxRegDp = muxRegPos(fromRegFileA) report "Invalid value" severity FAILURE;
+		assert MuxRegDp = fromRegFileA report "Invalid value" severity FAILURE;
 		wait for CLK_period;	-- Executing ... 1
 		
 		-- State writing on the registers
@@ -279,7 +279,7 @@ BEGIN
 		assert DpRegFileWriteAddr = r2 report "Invalid value" severity FAILURE; 
       assert DpAluOp = alu_sum report "Invalid value" severity FAILURE;
 		assert MuxDp = fromAlu report "Invalid value" severity FAILURE;				
-		assert MuxRegDp = muxRegPos(fromImediate) report "Invalid value" severity FAILURE;
+		assert MuxRegDp = fromImediate report "Invalid value" severity FAILURE;
 		assert DpRegFileReadAddrB = r2 report "Invalid value" severity FAILURE;
 		assert DpRegFileReadEnB = '1' report "Invalid value" severity FAILURE;
 				
@@ -346,8 +346,44 @@ BEGIN
 		
 		wait for CLK_period;	-- Executing ... 4
 		
-		wait for CLK_period;	-- Executing ... 4
+		--wait for CLK_period;	-- Executing ... 4
 		
+		-------------------------------------------------------------------------------------------------
+		
+		-- jmp 0 (Jump to position 0)--------------------------------------------------------------------
+		REPORT "jmp 0" SEVERITY NOTE;
+		MemoryDataInput <= jmp_val & conv_std_logic_vector(0,4) & conv_std_logic_vector(0, 22);
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
+		--wait for CLK_period;	-- Executing ... 1
+		--assert MemoryDataRdAddr = conv_std_logic_vector(0, 32) report "Invalid value" severity FAILURE;
+		
+		--wait for CLK_period;	-- Executing ... 2
+				
+		-------------------------------------------------------------------------------------------------
+		
+		-- jmpr 3 (Jump to position Current + 3)--------------------------------------------------------------------
+		REPORT "jmpr 3" SEVERITY NOTE;
+		MemoryDataInput <= jmpr_val & conv_std_logic_vector(0,4) & conv_std_logic_vector(3, 22);
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
+		wait for CLK_period;	-- Executing ... 1
+		--assert MemoryDataRdAddr = conv_std_logic_vector(3, 32) report "Invalid value" severity FAILURE;
+		
+		--wait for CLK_period;	-- Executing ... 2
+				
 		-------------------------------------------------------------------------------------------------
 
       -- Close file

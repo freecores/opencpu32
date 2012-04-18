@@ -142,9 +142,11 @@ begin
 					
 					when jmp_val =>
 						PC	<= "0000000000" & operand_imm;
+						nextCpuState <= fetch;
 					
 					when jmpr_val =>
 						PC	<= PC + ("0000000000" & operand_imm);
+						nextCpuState <= fetch;
 					
 					-- ld r5,20 (Load into r5 register the content of the memory at address 20)
 					when ld_val =>

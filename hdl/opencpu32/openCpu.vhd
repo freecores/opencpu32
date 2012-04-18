@@ -18,9 +18,9 @@ entity openCpu is
 	 Port ( rst : in  STD_LOGIC;												--! Reset signal
            clk : in  STD_LOGIC;												--! Clock signal
            mem_rd : out  STD_LOGIC;											--! Main memory Read enable
-           mem_rd_addr : out  STD_LOGIC_VECTOR (n downto 0);			--! Main memory Read address
+           mem_rd_addr : out  STD_LOGIC_VECTOR (n downto 0);		--! Main memory Read address
            mem_wr : out  STD_LOGIC;											--! Main memory Write enable
-           mem_wr_addr : out  STD_LOGIC_VECTOR (n downto 0);			--! Main memory Write address
+           mem_wr_addr : out  STD_LOGIC_VECTOR (n downto 0);		--! Main memory Write address
 			  mem_data_in : in  STD_LOGIC_VECTOR (n downto 0);			--! Data comming from main memory
 			  mem_data_out : out  STD_LOGIC_VECTOR (n downto 0)		--! Data to main memory
 			  );

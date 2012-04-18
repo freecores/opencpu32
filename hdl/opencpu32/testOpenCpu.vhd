@@ -111,6 +111,10 @@ BEGIN
 		end loop;										
 		
 		wait until mem_rd = '0';
+		wait for CLK_period;	-- Execute
+		wait for CLK_period;	-- Execute
+		wait for CLK_period;	-- Execute
+		wait for CLK_period;	-- Execute
 
       -- Finish simulation
 		assert false report "NONE. End of simulation." severity failure;
