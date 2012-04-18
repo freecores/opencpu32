@@ -24,7 +24,7 @@ entity ControlUnit is
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
 			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
            MuxDp : out  dpMuxInputs;										--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
-			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
+			  MuxRegDp : out dpMuxAluIn;										--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
            DpAluOp : out  aluOps;											--! Alu operations
 			  DpRegFileWriteAddr : out  generalRegisters;				--! General register address to write
@@ -238,7 +238,7 @@ begin
 					-- ADD r2,r0 (See the testDatapath to see how to drive the datapath for this function)
 					when add_reg | sub_reg | and_reg | or_reg | xor_reg =>
 						MuxDp <= fromAlu;
-						MuxRegDp <= muxRegPos(fromRegFileA);
+						MuxRegDp <= fromRegFileA;
 						DpRegFileReadAddrA <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));	-- Read first operand
 						DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg2))); -- Read second operand
 						DpRegFileReadEnA <= '1';
@@ -257,7 +257,7 @@ begin
 					-- ADD r3,2 (r2 <= r2+2) (See the testDatapath to see how to drive the datapath for this function)
 					when add_val | sub_val | and_val | or_val | xor_val =>
 						MuxDp <= fromAlu;
-						MuxRegDp <= muxRegPos(fromImediate);
+						MuxRegDp <= fromImediate;
 						DpRegFileWriteAddr <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));	
 						DpRegFileReadAddrB <= Num2reg(conv_integer(UNSIGNED(operand_reg1)));	-- Read first operand
 						DpRegFileReadEnB <= '1';												

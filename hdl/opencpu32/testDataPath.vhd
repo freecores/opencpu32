@@ -28,7 +28,7 @@ ARCHITECTURE behavior OF testDataPath IS
            outEn : in  typeEnDis;											--! Enable/Disable datapath output
            aluOp : in  aluOps;												--! Alu operations
            muxSel : in  dpMuxInputs;										--! Select inputs from dataPath(Memory,Imediate,RegisterFile,Alu)
-			  muxRegFile : in STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
+			  muxRegFile : in dpMuxAluIn;										--! Select Alu InputA (Memory,Imediate,RegFileA)
            regFileWriteAddr : in  generalRegisters;					--! General register write address
            regFileWriteEn : in  STD_LOGIC;								--! RegisterFile write enable signal
            regFileReadAddrA : in  generalRegisters;					--! General register read address (PortA)
@@ -47,7 +47,7 @@ ARCHITECTURE behavior OF testDataPath IS
    signal outEn : typeEnDis := disable;											--! Wire to connect Test signal to component
    signal aluOp : aluOps := alu_pass;												--! Wire to connect Test signal to component
    signal muxSel : dpMuxInputs := fromMemory;									--! Wire to connect Test signal to component
-	signal muxRegFile : std_logic_vector(1 downto 0) := (others => 'U'); --! Wire to connect Test signal to component
+	signal muxRegFile : dpMuxAluIn := fromMemory; 								--! Wire to connect Test signal to component
    signal regFileWriteAddr : generalRegisters := r0;							--! Wire to connect Test signal to component
    signal regFileWriteEn : std_logic := '0';										--! Wire to connect Test signal to component
    signal regFileReadAddrA : generalRegisters := r0;							--! Wire to connect Test signal to component
@@ -101,7 +101,7 @@ BEGIN
 		regFileWriteAddr <= r0;
       aluOp <= alu_pass;
 		muxSel <= fromImediate;
-		muxRegFile <= muxRegPos(fromRegFileA);
+		muxRegFile <= fromRegFileA;
 		regFileWriteEn <= '1';
 		wait for CLK_period;    -- Wait for clock cycle to latch some data to the register file
 		-- Read value in r0 to verify if is equal to 20
@@ -125,7 +125,7 @@ BEGIN
 		regFileWriteAddr <= r1;
       aluOp <= alu_pass;
 		muxSel <= fromImediate;
-		muxRegFile <= muxRegPos(fromRegFileA);
+		muxRegFile <= fromRegFileA;
 		regFileWriteEn <= '1';
 		wait for CLK_period;    -- Wait for clock cycle to latch some data to the register file
 		-- Read value in r1 to verify if is equal to 20
@@ -149,7 +149,7 @@ BEGIN
 		regFileEnB <= '1';		
 		regFileWriteAddr <= r2; -- Write data in r2
 		muxSel <= fromRegFileB;	-- Select the PortB output from regFile
-		muxRegFile <= muxRegPos(fromRegFileA);
+		muxRegFile <= fromRegFileA;
 		regFileWriteEn <= '1';
 		wait for CLK_period;    -- Wait for clock cycle to write into r2
 		-- Read value in r2 to verify if is equal to r1(20)
@@ -176,7 +176,7 @@ BEGIN
 		aluOp <= alu_sum;				
 		regFileWriteAddr <= r2; -- Write data in r2
 		muxSel <= fromAlu;	-- Select the Alu output
-		muxRegFile <= muxRegPos(fromRegFileA);
+		muxRegFile <= fromRegFileA;
 		regFileWriteEn <= '1';
 		wait for CLK_period;    -- Wait for clock cycle to write into r2
 		-- Read value in r2 to verify if is equal to 30(10+20)
@@ -204,7 +204,7 @@ BEGIN
 		aluOp <= alu_sum;				
 		regFileWriteAddr <= r3; -- Write data in r2
 		muxSel <= fromAlu;	-- Select the Alu output
-		muxRegFile <= muxRegPos(fromRegFileA);
+		muxRegFile <= fromRegFileA;
 		regFileWriteEn <= '1';
 		wait for CLK_period;    -- Wait for clock cycle to write into r2
 		-- Read value in r2 to verify if is equal to 30(10+20)
@@ -228,7 +228,7 @@ BEGIN
 		regFileReadAddrB <= r3;	-- Read data from r2
 		regFileEnB <= '1';		
 		regFileWriteAddr <= r3;
-		muxRegFile <= muxRegPos(fromImediate);
+		muxRegFile <= fromImediate;
       aluOp <= alu_sum;
 		muxSel <= fromAlu;	-- Select the Alu output		
 		regFileWriteEn <= '1';

@@ -37,7 +37,7 @@ COMPONENT DataPath is
            outEn : in  typeEnDis;											--! Enable/Disable datapath output
            aluOp : in  aluOps;												--! Alu operations
            muxSel : in  dpMuxInputs;										--! Select inputs from dataPath(Memory,Imediate,RegisterFile,Alu)
-			  muxRegFile : in STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
+			  muxRegFile : in dpMuxAluIn;										--! Select Alu InputA (Memory,Imediate,RegFileA)
            regFileWriteAddr : in  generalRegisters;					--! General register write address
            regFileWriteEn : in  STD_LOGIC;								--! RegisterFile write enable signal
            regFileReadAddrA : in  generalRegisters;					--! General register read address (PortA)
@@ -45,7 +45,7 @@ COMPONENT DataPath is
            regFileEnA : in  STD_LOGIC;										--! Enable RegisterFile PortA
            regFileEnB : in  STD_LOGIC;										--! Enable RegisterFile PortB
 			  outputDp : out  STD_LOGIC_VECTOR (n downto 0);			--! DataPath Output
-           dpFlags : out  STD_LOGIC_VECTOR (2 downto 0));			--! Alu Flags
+           dpFlags : out  STD_LOGIC_VECTOR (2 downto 0));
 end COMPONENT;
 
 COMPONENT ControlUnit is
@@ -56,7 +56,7 @@ COMPONENT ControlUnit is
            DataDp : in  STD_LOGIC_VECTOR (n downto 0);				--! Data comming from the Datapath
 			  outEnDp : out  typeEnDis;										--! Enable/Disable datapath output
            MuxDp : out  dpMuxInputs;										--! Select on datapath data from (Memory, Imediate, RegFileA, RegFileB, AluOut)
-			  MuxRegDp : out STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
+			  MuxRegDp : out dpMuxAluIn;										--! Select Alu InputA (Memory,Imediate,RegFileA)
            ImmDp : out  STD_LOGIC_VECTOR (n downto 0);				--! Imediate value passed to the Datapath
            DpAluOp : out  aluOps;											--! Alu operations
 			  DpRegFileWriteAddr : out  generalRegisters;				--! General register address to write
@@ -77,7 +77,7 @@ signal InputImediate : STD_LOGIC_VECTOR (n downto 0);
 signal enableOutputDp : typeEnDis;
 signal aluOperations : aluOps;
 signal InputDataPathSelector : dpMuxInputs;
-signal InputDataPathAluASelector : STD_LOGIC_VECTOR (1 downto 0);
+signal InputDataPathAluASelector : dpMuxAluIn;
 signal registerFileWriteAddress : generalRegisters;
 signal registerFileWriteEnable : STD_LOGIC;
 signal registerFileReadAddressA : generalRegisters;

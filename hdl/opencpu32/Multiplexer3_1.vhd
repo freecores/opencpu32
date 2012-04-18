@@ -17,7 +17,7 @@ entity Multiplexer3_1 is
 	 Port ( A : in  STD_LOGIC_VECTOR (n downto 0);		--! First Input
            B : in  STD_LOGIC_VECTOR (n downto 0);		--! Second Input
            C : in  STD_LOGIC_VECTOR (n downto 0);		--! Third Input
-           sel : in  STD_LOGIC_VECTOR(1 downto 0);		--! Select inputs (1, 2, 3)
+           sel : in dpMuxAluIn;								--! Select inputs (fromMemory, fromImediate, fromRegFileA)
            S : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
 end Multiplexer3_1;
 
@@ -27,9 +27,9 @@ architecture Behavioral of Multiplexer3_1 is
 
 begin
 	with sel select
-		S <= A when "00",
-			  B when "01",
-			  C when "10",			  			  
+		S <= A when fromMemory,
+			  B when fromImediate,
+			  C when fromRegFileA,			  			  
 			  (others => 'Z') when others;
 
 end Behavioral;

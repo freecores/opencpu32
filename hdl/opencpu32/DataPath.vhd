@@ -23,7 +23,7 @@ entity DataPath is
            outEn : in  typeEnDis;											--! Enable/Disable datapath output
            aluOp : in  aluOps;												--! Alu operations
            muxSel : in  dpMuxInputs;										--! Select inputs from dataPath(Memory,Imediate,RegisterFile,Alu)
-			  muxRegFile : in STD_LOGIC_VECTOR(1 downto 0);				--! Select Alu InputA (Memory,Imediate,RegFileA)
+			  muxRegFile : in dpMuxAluIn;										--! Select Alu InputA (Memory,Imediate,RegFileA)
            regFileWriteAddr : in  generalRegisters;					--! General register write address
            regFileWriteEn : in  STD_LOGIC;								--! RegisterFile write enable signal
            regFileReadAddrA : in  generalRegisters;					--! General register read address (PortA)
@@ -56,7 +56,7 @@ COMPONENT Multiplexer3_1 is
 	 Port ( A : in  STD_LOGIC_VECTOR (n downto 0);		--! First Input
            B : in  STD_LOGIC_VECTOR (n downto 0);		--! Second Input
            C : in  STD_LOGIC_VECTOR (n downto 0);		--! Third Input
-           sel : in  STD_LOGIC_VECTOR(1 downto 0);		--! Select inputs (1, 2, 3)
+           sel : in dpMuxAluIn;								--! Select inputs (fromMemory, fromImediate, fromRegFileA)
            S : out  STD_LOGIC_VECTOR (n downto 0));	--! Mux Output
 end COMPONENT;
 
