@@ -146,9 +146,13 @@ begin
 					when jmpr_val =>
 						PC	<= PC + ("0000000000" & operand_imm);
 					
+					-- ld r5,20 (Load into r5 register the content of the memory at address 20)
 					when ld_val =>
 						MemoryDataRdAddr <= "0000000000" & operand_imm;
 						MemoryDataReadEn <= '1';
+						if cyclesExecute = 0 then
+							MemoryDataReadEn <= '0';
+						end if;
 					
 					-- STORE r1,10 (Store the value 10 on memory address pointed by r1)
 					when stom_val =>

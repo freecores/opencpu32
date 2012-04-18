@@ -322,10 +322,32 @@ BEGIN
 		
 		-- Verify memory strobe signal
 		assert MemoryDataWriteEn = '1' report "Invalid value" severity FAILURE;
+				
+		-------------------------------------------------------------------------------------------------
+		
+		-- ld r5,20 (Load into r5 register the content of the memory at address 20)----------------------
+		REPORT "ld r5,20" SEVERITY NOTE;
+		MemoryDataInput <= ld_val & conv_std_logic_vector(reg2Num(r5),4) & conv_std_logic_vector(20, 22);
+		wait for CLK_period;	-- Fetch
+		wait for CLK_period;	-- Decode
+		wait for CLK_period;	-- Execute
+		
+		-- Write the command to a file (This will be usefull for the top Testing later)
+		WRITE (line_out, MemoryDataInput);
+		WRITELINE (cmdfile, line_out);
+		
+		assert MemoryDataRdAddr = conv_std_logic_vector(20, 32) report "Invalid value" severity FAILURE;
+		
+		wait for CLK_period;	-- Executing ... 1
+		
+		wait for CLK_period;	-- Executing ... 2
 		
 		wait for CLK_period;	-- Executing ... 3
 		
-		assert MemoryDataWriteEn = '0' report "Invalid value" severity FAILURE;
+		wait for CLK_period;	-- Executing ... 4
+		
+		wait for CLK_period;	-- Executing ... 4
+		
 		-------------------------------------------------------------------------------------------------
 
       -- Close file
