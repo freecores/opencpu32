@@ -15,6 +15,7 @@ library ieee;
 use ieee.STD_LOGIC_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;      
 
 package pkgOpenCPU32 is
 
@@ -25,7 +26,7 @@ constant instructionSize : integer := nBits;
 --! Number of general registers (r0..r15)
 constant numGenRegs : integer := 16;
 
-type aluOps is (alu_pass, alu_passB, alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_or, alu_and, 
+type aluOps is (alu_pass, alu_passB, alu_sum, alu_sub, alu_inc, alu_dec, alu_mul, alu_udiv, alu_or, alu_and, 
 	alu_xor, alu_not, alu_shfLt, alu_shfRt, alu_roLt, alu_roRt);
 type typeEnDis is (enable, disable);
 type generalRegisters is (r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15);
@@ -44,6 +45,7 @@ function Num2reg (a: integer) return generalRegisters;
 function muxPos( a: dpMuxInputs) return std_logic_vector;
 function muxRegPos(a: dpMuxAluIn) return std_logic_vector;
 function opcode2AluOp (opcode : std_logic_vector(5 downto 0)) return aluOps;
+function udivision(dividend: unsigned; divisor: unsigned) return unsigned;
 
 -- Opcodes
 subtype opcodes is std_logic_vector(5 downto 0);	-- 6 Bits (64 instructions max)
@@ -193,5 +195,33 @@ begin
 	end case;
 	return valRet;
 end opcode2AluOp;
+
+-- Code based on Restoring division algorithm
+-- http://vhdlguru.blogspot.com.br/2010/03/vhdl-function-for-division-two-signed.html
+-- http://en.wikipedia.org/wiki/Division_%28digital%29
+function udivision(dividend: unsigned; divisor: unsigned) return unsigned is
+variable a1 : unsigned(dividend'length-1 downto 0);
+variable b1 : unsigned(divisor'length-1 downto 0);
+variable p1 : unsigned(divisor'length downto 0);
+variable i : integer;
+begin
+	a1 := dividend;
+	b1 := divisor;
+	p1 := (others => '0');
+	i := 0;
+	for i in 0 to divisor'length-1 loop
+		p1(divisor'length-1 downto 1) := p1(divisor'length-2 downto 0);
+		p1(0) := a1(dividend'length-1);
+		a1(dividend'length-1 downto 1) := a1(dividend'length-2 downto 0);
+		p1 := p1-b1;
+		if(p1(divisor'length-1) ='1') then
+			a1(0) :='0';
+			p1 := p1+b1;
+		else
+			a1(0) :='1';
+		end if;
+	end loop;
+	return a1;
+end;
 
 end pkgOpenCPU32;
